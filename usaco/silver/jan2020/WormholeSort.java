@@ -1,3 +1,15 @@
+package usaco.silver.jan2020;
+/**
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=992
+ 
+There are multiple ways to solve this problem.
+The most efficient one is an elegant use of DSU only.
+[TODO] complete this writeup
+
+My implementation of Binary Search + DSU can be found at 
+https://github.com/lamng3/lamng3/blob/master/_posts/usaco/2025-03-15-usaco-silver-2020-jan-wormsort.md
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,17 +17,93 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
-    public static void solve(FastScanner io) throws Exception {
+public class WormholeSort {
+    static class DSU {
+        int[] parent;
+        int[] sz;
+        public DSU(int n) {
+            parent = new int[n];
+            sz = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                sz[i] = 1;
+            }
+        }
+        int find(int v) {
+            if (parent[v] == v) return v;
+            return parent[v] = find(parent[v]);
+        }
+        void union(int a, int b) {
+            a = find(a);
+            b = find(b);
+            if (a == b) return;
+            if (sz[a] < sz[b]) {
+                int tmp = a;
+                a = b;
+                b = tmp;
+            }
+            parent[b] = a;
+            sz[a] += sz[b];
+        }
+        int size(int v) { return sz[find(v)]; }
+        boolean connected(int a, int b) { return find(a) == find(b); }
+    }
 
+    static class Wormhole implements Comparable<Wormhole> {
+        int a, b, w;
+        public Wormhole(int x, int y, int z) { a = x; b = y; w = z; }
+        @Override
+        public int compareTo(Wormhole wh) { return wh.w - w; }
+    }
+
+    public static void solve(FastScanner io) throws Exception {
+        int N = io.nextInt(), M = io.nextInt();
+        DSU dsu = new DSU(N);
+
+        boolean ok = true;
+
+        int[] p = new int[N];
+        for (int i = 0; i < N; i++) {
+            p[i] = io.nextInt()-1;
+            if (p[i] != i) ok = false;
+        }
+
+        if (ok) {
+            io.println(-1);
+            return;
+        }
+
+        Wormhole[] whs = new Wormhole[M];
+        for (int i = 0; i < M; i++) {
+            int a = io.nextInt()-1, b = io.nextInt()-1;
+            int w = io.nextInt();
+            whs[i] = new Wormhole(a, b, w);
+        }
+
+        // descending
+        Arrays.sort(whs);
+
+        int answer = oo;
+
+        int idx = 0;
+        for (int i = 0; i < N; i++) {
+            while (idx < M && dsu.find(i) != dsu.find(p[i])) {
+                Wormhole wh = whs[idx];
+                dsu.union(wh.a, wh.b);
+                answer = Math.min(answer, wh.w);
+                idx++;
+            }
+        }
+
+        io.println(answer);
     }
 
     /**
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        FastScanner io = new FastScanner("wormsort"); // usaco
-        // FastScanner io = new FastScanner();
+        // FastScanner io = new FastScanner("wormsort"); // usaco
+        FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {

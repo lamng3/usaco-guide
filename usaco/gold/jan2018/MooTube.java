@@ -1,6 +1,6 @@
 package usaco.gold.jan2018;
 /**
-problem url: https://usaco.org/index.php?page=viewproblem2&cpid=789
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=789
 
 This problem uses DSU in a quite beautiful way.
 I believe is the key to this problem is sorting the edges and queries.
