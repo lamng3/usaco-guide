@@ -1,0 +1,11 @@
+# compiled java classes
+*.class
+
+# CPH Judge (extension in VSCode)
+.cph/
+lib/
+
+# these templates have been incorporated in Main.java
+Kattio.java
+FastScanner.java
+template.java
