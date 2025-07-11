@@ -1,10 +1,9 @@
-package usaco.topics.dynamic_programming;
+package usaco.topics.gold.sliding_window;
 /**
-Chapter: Knapsack DP
 Source: AtCoder
-Problem url: https://atcoder.jp/contests/abc321/tasks/abc321_f
+Problem url: https://atcoder.jp/contests/abc194/tasks/abc194_e
 
-Time Complexity: O(QK)
+Time Complexity:
 */
 
 import java.io.*;
@@ -14,40 +13,53 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class SubsetSumQueries {
-    public static void solve(FastScanner io) throws Exception {
-        int Q = io.nextInt(), K = io.nextInt();
-        int modulo = 998244353;
-        long[] dp = new long[K+1];
-        dp[0] = 1;
-        for (int i = 0; i < Q; i++) {
-            String[] line = io.nextLine().split(" ");
-            String type = line[0];
-            int x = Integer.parseInt(line[1]);
-            if (type.equals("+")) {
-                // e.g. add ball 5 -> dp[10] += dp[5] (count ball 5)
-                // then dp[15] += dp[10] (count ball 5 again)
-                // in this way, we have already double counted the ball 5
-                for (int j = K; j >= x; j--) {
-                    dp[j] += dp[j-x];
-                    dp[j] %= modulo;
-                }
-            }
-            else {
-                // when we remove a ball, we remove bottom up
-                // to avoid double removing
-                // e.g. combinations (4+6) not having ball 5 to remove, 
-                // but sums up to 10
-                // so dp[15] -= dp[10] would also eliminate those
-                // instead, dp[10] -= dp[5] will ensure the remaining combinations
-                for (int j = x; j <= K; j++) {
-                    // dp[j] -= dp[j-x] may overflow
-                    dp[j] += modulo - dp[j-x];
-                    dp[j] %= modulo;
-                }
-            }
-            io.println(dp[K]);
+public class MexMin {
+    static class Multiset {
+        TreeMap<Integer, Integer> ms;
+        TreeSet<Integer> mexset;
+        public Multiset(int n) { 
+            ms = new TreeMap<>();
+            mexset = new TreeSet<>();
+            for (int i = 0; i <= n; i++) mexset.add(i);
         }
+        void add(int x) {
+            ms.merge(x, 1, Integer::sum); 
+            mexset.remove(x);
+        }
+        void remove(int x) {
+            ms.merge(x, -1, Integer::sum);
+            if (ms.get(x) <= 0) {
+                ms.remove(x);
+                mexset.add(x);
+            }
+        }
+        int mex() { 
+            return mexset.first(); 
+        }
+    }
+
+    public static void solve(FastScanner io) throws Exception {
+        int N = io.nextInt(), M = io.nextInt();
+
+        int[] A = new int[N+1];
+        int maxA = 0; 
+        for (int i = 1; i <= N; i++) {
+            A[i] = io.nextInt();
+            maxA = Math.max(maxA, A[i]);
+        }
+
+        // small optimization to bypass TLE
+        // by avoid initializing Multiset with large N
+        Multiset ms = new Multiset(maxA+5);
+        for (int i = 1; i <= M; i++) ms.add(A[i]);
+
+        int answer = ms.mex();
+        for (int i = M+1; i <= N; i++) {
+            ms.remove(A[i - M]);
+            ms.add(A[i]);
+            answer = Math.min(answer, ms.mex());
+        }
+        io.println(answer);
     }
 
     /**
