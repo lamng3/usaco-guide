@@ -13,7 +13,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class DistinctValuesSubarraysII {
+public class SubarrayDistinctValues {
     static class Multiset {
         Map<Integer, Integer> ms;
         public Multiset() { 
