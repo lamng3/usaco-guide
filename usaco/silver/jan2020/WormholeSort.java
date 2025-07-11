@@ -4,7 +4,12 @@ Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=992
  
 There are multiple ways to solve this problem.
 The most efficient one is an elegant use of DSU only.
-[TODO] complete this writeup
+
+The idea is to sort the wormholdes in descending width. 
+If we take from ascending wormholes width, we are assuming that the least width is the smallest one.
+The original task ask for the least width that MUST be used, so starting from largest width downward make the most sense here.
+
+We will greedily unite all cows until p[i] = i. That way, we are left with the smallest MUST use wormhole.
 
 My implementation of Binary Search + DSU can be found at 
 https://github.com/lamng3/lamng3/blob/master/_posts/usaco/2025-03-15-usaco-silver-2020-jan-wormsort.md
@@ -81,10 +86,6 @@ public class WormholeSort {
         }
 
         // descending
-        // if we take from ascending wormholes width
-        // we are assuming that the least width is the smallest one
-        // the original task ask for the least width that MUST be used
-        // so starting from largest width downward make the most sense here
         Arrays.sort(whs);
 
         int answer = oo;
