@@ -13,7 +13,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class SubsetSumQuery {
+public class SubsetSumQueries {
     public static void solve(FastScanner io) throws Exception {
         int Q = io.nextInt(), K = io.nextInt();
         int modulo = 998244353;
