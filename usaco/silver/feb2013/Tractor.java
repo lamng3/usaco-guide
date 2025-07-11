@@ -8,9 +8,17 @@ to be 1M edges. Each one having height difference D.
 
 The task here is to visit AT LEAST HALF of the cells (rounded up if odd).
 
-[TODO] continue with writeup and complexity
+We need to find a way to check if a tractor can reach at least half of the cells.
+We now the minimum and maximum values of a grid, thus, we can deduce a maximum difference.
+The intuition here is to use Binary Search On Value, with the value being the difference or the cost of a tractor.
+Given we have a difference, the task now becomes finding connected components where each neighbor cell is no more than diff difference.
+DSU jumps into place here, where it allows us to count the size of the components and effectively retrieve the maxsize among all components.
+I do think DFS works, but it requires some household variable to maintain the size of the component.
 
-Time Complexity: 
+Time Complexity: O(N^2 * ack(N^2)) 
+where 1e6 be the maximum difference, ack(.) be the inverse ackermann function.
+Note that the time complexity cost of binary search here can be treated as constant -- log(1e6)
+Each cell has at most 4 neighbors, that is constant too :)
 */
 
 import java.io.*;
