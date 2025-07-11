@@ -6,91 +6,8 @@ import java.util.stream.*;
     Nathan
 */
 public class Main {
-    static class DSU {
-        int[] parent;
-        int[] sz;
-        public DSU(int n) {
-            parent = new int[n];
-            sz = new int[n];
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                sz[i] = 1;
-            }
-        }
-        int find(int v) {
-            if (parent[v] == v) return v;
-            return parent[v] = find(parent[v]);
-        }
-        boolean union(int a, int b) {
-            a = find(a);
-            b = find(b);
-            if (a == b) return false;
-            if (sz[a] < sz[b]) {
-                int tmp = a;
-                a = b;
-                b = tmp;
-            }
-            parent[b] = a;
-            sz[a] += sz[b];
-            return true;
-        }
-        int size(int v) { return sz[find(v)]; }
-    }
-
-    public static boolean inrange(int x, int y, int N) {
-        return 0 <= x && x < N && 0 <= y && y < N;
-    }
-    public static int hash(int i, int j) { return i * 1000 + j; }
-
-    public static boolean check(int diff, int[][] grid, int N) {
-        // count components where height difference <= diff
-        // record maxsize
-        int target = (N * N + 1) / 2;
-        int MAXN = 1000 * 1000 + 5;
-        DSU dsu = new DSU(MAXN);
-        int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
-        int maxsize = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                for (int[] d : dirs) {
-                    int newi = i + d[0], newj = j + d[1];
-                    if (!inrange(newi, newj, N)) continue;
-                    if (Math.abs(grid[newi][newj] - grid[i][j]) > diff) continue;
-                    dsu.union(hash(i, j), hash(newi, newj));
-                    maxsize = Math.max(maxsize, dsu.size(hash(i,j)));
-                }
-            }
-        }
-        return maxsize >= target;
-    }
-
-    public static int search(int dmax, int[][] grid, int N) {
-        int pos = dmax;
-        for (int x = pos; x >= 1; x /= 2) {
-            while (check(pos - x, grid, N)) {
-                pos -= x;
-            }
-        }
-        return pos;
-    }
-
     public static void solve(FastScanner io) throws Exception {
-        int N = io.nextInt();
-        int min = oo, max = -1;
-
-        int[][] grid = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                grid[i][j] = io.nextInt();
-                min = Math.min(min, grid[i][j]);
-                max = Math.max(max, grid[i][j]);
-            }
-        }
-
-        int dmax = max - min;
-        // difference running from [0, dmax]
-        int answer = search(dmax, grid, N);
-        io.println(answer);
+        
     }
 
     /**
@@ -154,6 +71,29 @@ public class Main {
             b >>= 1;
         }
         return res;
+    }
+    static boolean[] sieve(int n) {
+        boolean[] prime = new boolean[n+1];
+        Arrays.fill(prime, true);
+        prime[0] = prime[1] = false;
+        for (int i = 2; i * i <= n; i++) {
+            if (prime[i]) {
+                for (int j = i * i; j <= n; j += i)
+                    prime[j] = false;
+            }
+        }
+        return prime;
+    }
+    static int[] primeFactorization(int n) {
+        int[] prime = new int[n+1];
+        for (int p = 2; p * p <= n; p++) {
+            while (n % p == 0) {
+                prime[p]++;
+                n /= p;
+            }
+        }
+        if (n > 1) prime[n] = 1; // if n is a large prime
+        return prime;
     }
  
     // ARRAY OPERATIONS
