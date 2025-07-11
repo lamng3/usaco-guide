@@ -1,3 +1,5 @@
+package usaco.gold.dec2016;
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,7 +7,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class MooCast {
     static class DSU {
         int[] parent;
         int[] sz;
@@ -85,8 +87,8 @@ public class Main {
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        // FastScanner io = new FastScanner("usaco-problem-name"); // usaco
-        FastScanner io = new FastScanner();
+        FastScanner io = new FastScanner("moocast"); // usaco
+        // FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {
