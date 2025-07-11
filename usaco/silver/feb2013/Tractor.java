@@ -1,3 +1,18 @@
+package usaco.silver.feb2013;
+/**
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=245
+
+This problem is fairly interesting. One might not think of DSU right away :)
+The intuition is that N^2 = 250000, each cell has at most 4 neighbors, making total number of edges
+to be 1M edges. Each one having height difference D. 
+
+The task here is to visit AT LEAST HALF of the cells (rounded up if odd).
+
+[TODO] continue with writeup and complexity
+
+Time Complexity: 
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,7 +20,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class Tractor {
     static class DSU {
         int[] parent;
         int[] sz;
@@ -97,8 +112,8 @@ public class Main {
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        // FastScanner io = new FastScanner("usaco-problem-name"); // usaco
-        FastScanner io = new FastScanner();
+        FastScanner io = new FastScanner("tractor"); // usaco
+        // FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {
