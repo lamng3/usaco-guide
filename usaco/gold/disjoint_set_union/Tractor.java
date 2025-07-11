@@ -1,18 +1,24 @@
-package usaco.silver.jan2020;
+package usaco.gold.disjoint_set_union;
 /**
-Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=992
- 
-There are multiple ways to solve this problem.
-The most efficient one is an elegant use of DSU only.
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=245
 
-The idea is to sort the wormholdes in descending width. 
-If we take from ascending wormholes width, we are assuming that the least width is the smallest one.
-The original task ask for the least width that MUST be used, so starting from largest width downward make the most sense here.
+This problem is fairly interesting. One might not think of DSU right away :)
+The intuition is that N^2 = 250000, each cell has at most 4 neighbors, making total number of edges
+to be 1M edges. Each one having height difference D. 
 
-We will greedily unite all cows until p[i] = i. That way, we are left with the smallest MUST use wormhole.
+The task here is to visit AT LEAST HALF of the cells (rounded up if odd).
 
-My implementation of Binary Search + DSU can be found at 
-https://github.com/lamng3/lamng3/blob/master/_posts/usaco/2025-03-15-usaco-silver-2020-jan-wormsort.md
+We need to find a way to check if a tractor can reach at least half of the cells.
+We now the minimum and maximum values of a grid, thus, we can deduce a maximum difference.
+The intuition here is to use Binary Search On Value, with the value being the difference or the cost of a tractor.
+Given we have a difference, the task now becomes finding connected components where each neighbor cell is no more than diff difference.
+DSU jumps into place here, where it allows us to count the size of the components and effectively retrieve the maxsize among all components.
+I do think DFS works, but it requires some household variable to maintain the size of the component.
+
+Time Complexity: O(N^2 * ack(N^2)) 
+where 1e6 be the maximum difference, ack(.) be the inverse ackermann function.
+Note that the time complexity cost of binary search here can be treated as constant -- log(1e6)
+Each cell has at most 4 neighbors, that is constant too :)
 */
 
 import java.io.*;
@@ -22,7 +28,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class WormholeSort {
+public class Tractor {
     static class DSU {
         int[] parent;
         int[] sz;
@@ -38,10 +44,10 @@ public class WormholeSort {
             if (parent[v] == v) return v;
             return parent[v] = find(parent[v]);
         }
-        void union(int a, int b) {
+        boolean union(int a, int b) {
             a = find(a);
             b = find(b);
-            if (a == b) return;
+            if (a == b) return false;
             if (sz[a] < sz[b]) {
                 int tmp = a;
                 a = b;
@@ -49,57 +55,64 @@ public class WormholeSort {
             }
             parent[b] = a;
             sz[a] += sz[b];
+            return true;
         }
         int size(int v) { return sz[find(v)]; }
-        boolean connected(int a, int b) { return find(a) == find(b); }
     }
 
-    static class Wormhole implements Comparable<Wormhole> {
-        int a, b, w;
-        public Wormhole(int x, int y, int z) { a = x; b = y; w = z; }
-        @Override
-        public int compareTo(Wormhole wh) { return wh.w - w; }
+    public static boolean inrange(int x, int y, int N) {
+        return 0 <= x && x < N && 0 <= y && y < N;
+    }
+    public static int hash(int i, int j) { return i * 1000 + j; }
+
+    public static boolean check(int diff, int[][] grid, int N) {
+        // count components where height difference <= diff
+        // record maxsize
+        int target = (N * N + 1) / 2;
+        int MAXN = 1000 * 1000 + 5;
+        DSU dsu = new DSU(MAXN);
+        int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
+        int maxsize = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                for (int[] d : dirs) {
+                    int newi = i + d[0], newj = j + d[1];
+                    if (!inrange(newi, newj, N)) continue;
+                    if (Math.abs(grid[newi][newj] - grid[i][j]) > diff) continue;
+                    dsu.union(hash(i, j), hash(newi, newj));
+                    maxsize = Math.max(maxsize, dsu.size(hash(i,j)));
+                }
+            }
+        }
+        return maxsize >= target;
+    }
+
+    public static int search(int dmax, int[][] grid, int N) {
+        int pos = dmax;
+        for (int x = pos; x >= 1; x /= 2) {
+            while (check(pos - x, grid, N)) {
+                pos -= x;
+            }
+        }
+        return pos;
     }
 
     public static void solve(FastScanner io) throws Exception {
-        int N = io.nextInt(), M = io.nextInt();
-        DSU dsu = new DSU(N);
+        int N = io.nextInt();
+        int min = oo, max = -1;
 
-        boolean ok = true;
-
-        int[] p = new int[N];
+        int[][] grid = new int[N][N];
         for (int i = 0; i < N; i++) {
-            p[i] = io.nextInt()-1;
-            if (p[i] != i) ok = false;
-        }
-
-        if (ok) {
-            io.println(-1);
-            return;
-        }
-
-        Wormhole[] whs = new Wormhole[M];
-        for (int i = 0; i < M; i++) {
-            int a = io.nextInt()-1, b = io.nextInt()-1;
-            int w = io.nextInt();
-            whs[i] = new Wormhole(a, b, w);
-        }
-
-        // descending
-        Arrays.sort(whs);
-
-        int answer = oo;
-
-        int idx = 0;
-        for (int i = 0; i < N; i++) {
-            while (idx < M && dsu.find(i) != dsu.find(p[i])) {
-                Wormhole wh = whs[idx];
-                dsu.union(wh.a, wh.b);
-                answer = Math.min(answer, wh.w);
-                idx++;
+            for (int j = 0; j < N; j++) {
+                grid[i][j] = io.nextInt();
+                min = Math.min(min, grid[i][j]);
+                max = Math.max(max, grid[i][j]);
             }
         }
 
+        int dmax = max - min;
+        // difference running from [0, dmax]
+        int answer = search(dmax, grid, N);
         io.println(answer);
     }
 
@@ -107,8 +120,8 @@ public class WormholeSort {
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        // FastScanner io = new FastScanner("wormsort"); // usaco
-        FastScanner io = new FastScanner();
+        FastScanner io = new FastScanner("tractor"); // usaco
+        // FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {

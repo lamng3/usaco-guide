@@ -1,7 +1,7 @@
-package usaco.topics.gold.sliding_window;
+package usaco.gold.sliding_window;
 /**
-Source: AtCoder
-Problem url: https://atcoder.jp/contests/abc194/tasks/abc194_e
+Source: CSES
+Problem url: https://cses.fi/problemset/task/2428/
 
 Time Complexity:
 */
@@ -13,51 +13,37 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class MexMin {
+public class DistinctValuesSubarraysII {
     static class Multiset {
-        TreeMap<Integer, Integer> ms;
-        TreeSet<Integer> mexset;
-        public Multiset(int n) { 
-            ms = new TreeMap<>();
-            mexset = new TreeSet<>();
-            for (int i = 0; i <= n; i++) mexset.add(i);
+        Map<Integer, Integer> ms;
+        public Multiset() { 
+            // using TreeMap would TLE
+            // HashMap for O(1)
+            // although constraints should work for both :)
+            ms = new HashMap<>(); 
         }
-        void add(int x) {
-            ms.merge(x, 1, Integer::sum); 
-            mexset.remove(x);
-        }
+        void add(int x) { ms.merge(x, 1, Integer::sum); }
         void remove(int x) {
             ms.merge(x, -1, Integer::sum);
-            if (ms.get(x) <= 0) {
-                ms.remove(x);
-                mexset.add(x);
-            }
+            if (ms.get(x) <= 0) ms.remove(x);
         }
-        int mex() { 
-            return mexset.first(); 
-        }
+        int size() { return ms.size(); }
+        boolean contains(int x) { return ms.containsKey(x); }
     }
 
     public static void solve(FastScanner io) throws Exception {
-        int N = io.nextInt(), M = io.nextInt();
-
-        int[] A = new int[N+1];
-        int maxA = 0; 
-        for (int i = 1; i <= N; i++) {
-            A[i] = io.nextInt();
-            maxA = Math.max(maxA, A[i]);
-        }
-
-        // small optimization to bypass TLE
-        // by avoid initializing Multiset with large N
-        Multiset ms = new Multiset(maxA+5);
-        for (int i = 1; i <= M; i++) ms.add(A[i]);
-
-        int answer = ms.mex();
-        for (int i = M+1; i <= N; i++) {
-            ms.remove(A[i - M]);
-            ms.add(A[i]);
-            answer = Math.min(answer, ms.mex());
+        int n = io.nextInt(), k = io.nextInt();
+        int[] x = new int[n];
+        for (int i = 0; i < n; i++) x[i] = io.nextInt();
+        long answer = 0;
+        Multiset ms = new Multiset();
+        for (int i = 0, j = 0; i < n; i++) {
+            while (j < n && (ms.size() < k || ms.contains(x[j]))) {
+                ms.add(x[j]);
+                j++;
+            }
+            answer += (j-i);
+            ms.remove(x[i]);
         }
         io.println(answer);
     }

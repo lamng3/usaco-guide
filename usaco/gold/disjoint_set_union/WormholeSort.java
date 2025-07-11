@@ -1,33 +1,28 @@
-package usaco.gold.jan2018;
+package usaco.gold.disjoint_set_union;
 /**
-Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=789
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=992
+ 
+There are multiple ways to solve this problem.
+The most efficient one is an elegant use of DSU only.
 
-This problem uses DSU in a quite beautiful way.
-I believe is the key to this problem is sorting the edges and queries.
+The idea is to sort the wormholdes in descending width. 
+If we take from ascending wormholes width, we are assuming that the least width is the smallest one.
+The original task ask for the least width that MUST be used, so starting from largest width downward make the most sense here.
 
-Note that DSU can effectively create relationships, not destroying them.
-DSU works well when we are counting the number of connected components.
+We will greedily unite all cows until p[i] = i. That way, we are left with the smallest MUST use wormhole.
 
-What role does sorting have here?
-Because we are looking at finding the number of videos having relevance >= K.
-Therefore, if we are treating the edges and queries in descending order, 
-we can actually reuses the edges added in previous queries 
-(as they already maintain set of edges with >= current relevance value)
-
-Note that we have to maintain the id of the query to reconstruct the answer.
-
-Time Complexity: O(N + Q * ackerman(N))
-As each query is handled once; each edge is visited once.
+My implementation of Binary Search + DSU can be found at 
+https://github.com/lamng3/lamng3/blob/master/_posts/usaco/2025-03-15-usaco-silver-2020-jan-wormsort.md
 */
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
-
+ 
 /**
     Nathan
 */
-public class MooTube {
+public class WormholeSort {
     static class DSU {
         int[] parent;
         int[] sz;
@@ -56,65 +51,63 @@ public class MooTube {
             sz[a] += sz[b];
         }
         int size(int v) { return sz[find(v)]; }
+        boolean connected(int a, int b) { return find(a) == find(b); }
     }
 
-    static class Edge implements Comparable<Edge> {
-        int p, q, r;
-        public Edge(int x, int y, int z) { p = x; q = y; r = z; }
+    static class Wormhole implements Comparable<Wormhole> {
+        int a, b, w;
+        public Wormhole(int x, int y, int z) { a = x; b = y; w = z; }
         @Override
-        public int compareTo(Edge e) { return e.r - r; }
-    }
-
-    static class Query implements Comparable<Query> {
-        int k, v, i;
-        public Query(int x, int y, int z) { k = x; v = y; i = z; }
-        @Override
-        public int compareTo(Query q) { return q.k - k; }
+        public int compareTo(Wormhole wh) { return wh.w - w; }
     }
 
     public static void solve(FastScanner io) throws Exception {
-        int N = io.nextInt(), Q = io.nextInt();
+        int N = io.nextInt(), M = io.nextInt();
+        DSU dsu = new DSU(N);
 
-        Edge[] edge = new Edge[N-1];
-        for (int i = 0; i < N-1; i++) {
-            int p = io.nextInt()-1, q = io.nextInt()-1;
-            int r = io.nextInt();
-            edge[i] = new Edge(p, q, r);
+        boolean ok = true;
+
+        int[] p = new int[N];
+        for (int i = 0; i < N; i++) {
+            p[i] = io.nextInt()-1;
+            if (p[i] != i) ok = false;
         }
 
-        Query[] query = new Query[Q];
-        for (int i = 0; i < Q; i++) {
-            int k = io.nextInt();
-            int v = io.nextInt()-1;
-            query[i] = new Query(k, v, i);
+        if (ok) {
+            io.println(-1);
+            return;
+        }
+
+        Wormhole[] whs = new Wormhole[M];
+        for (int i = 0; i < M; i++) {
+            int a = io.nextInt()-1, b = io.nextInt()-1;
+            int w = io.nextInt();
+            whs[i] = new Wormhole(a, b, w);
         }
 
         // descending
-        Arrays.sort(edge);
-        Arrays.sort(query);
+        Arrays.sort(whs);
 
-        DSU dsu = new DSU(N);
-        int[] answer = new int[Q];
+        int answer = oo;
 
         int idx = 0;
-        for (Query qu : query) {
-            int v = qu.v;
-            int curk = qu.k;
-            while (idx < N-1 && edge[idx].r >= curk) {
-                dsu.union(edge[idx].p, edge[idx].q);
+        for (int i = 0; i < N; i++) {
+            while (idx < M && dsu.find(i) != dsu.find(p[i])) {
+                Wormhole wh = whs[idx];
+                dsu.union(wh.a, wh.b);
+                answer = Math.min(answer, wh.w);
                 idx++;
             }
-            answer[qu.i] = dsu.size(v) - 1;
         }
 
-        for (int x : answer) io.println(x);
+        io.println(answer);
     }
 
     /**
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        // FastScanner io = new FastScanner("mootube"); // usaco
+        // FastScanner io = new FastScanner("wormsort"); // usaco
         FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases

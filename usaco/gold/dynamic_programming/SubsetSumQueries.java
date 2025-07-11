@@ -1,4 +1,4 @@
-package usaco.topics.gold.dynamic_programming;
+package usaco.gold.dynamic_programming;
 /**
 Chapter: Knapsack DP
 Source: AtCoder

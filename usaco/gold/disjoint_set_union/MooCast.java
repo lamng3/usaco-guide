@@ -1,8 +1,14 @@
-package usaco.gold.dec2017;
+package usaco.gold.disjoint_set_union;
 /**
-Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=767#
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=669
+ 
+The intuition is with N small, we can easily compute pairwise distance in O(N^2).
+We now sort the edges between the cows by distance O(N^2 * log(N^2)).
+The next process is to greedily assign walkie-talkies to connect each cows, until all cows are connected.
+When all cows are connected, the maximum distance will be the cost X we need.abstract.
 
-Time Complexity:
+Time Complexity: O(N^2 * (log(N^2) + ack(N)))
+where ack(N) is the inverse ackermann function (grow very slowly).
 */
 
 import java.io.*;
@@ -12,41 +18,78 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class HayFeast {
-    static class Multiset {
-        TreeMap<Long, Integer> ms;
-        public Multiset() { ms = new TreeMap<>(); }
-        void add(long x) { ms.merge(x, 1, Integer::sum); }
-        void remove(long x) {
-            ms.merge(x, -1, Integer::sum);
-            if (ms.get(x) <= 0) ms.remove(x);
+public class MooCast {
+    static class DSU {
+        int[] parent;
+        int[] sz;
+        public DSU(int n) {
+            parent = new int[n];
+            sz = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                sz[i] = 1;
+            }
         }
-        long max() { return ms.lastKey(); }
+        int find(int v) {
+            if (parent[v] == v) return v;
+            return parent[v] = find(parent[v]);
+        }
+        boolean union(int a, int b) {
+            a = find(a);
+            b = find(b);
+            if (a == b) return false;
+            if (sz[a] < sz[b]) {
+                int tmp = a;
+                a = b;
+                b = tmp;
+            }
+            parent[b] = a;
+            sz[a] += sz[b];
+            return true;
+        }
+    }
+
+    static long distance(int[] a, int [] b) {
+        return (a[0] - b[0]) * 1L * (a[0] - b[0]) 
+                + (a[1] - b[1]) * 1L * (a[1] - b[1]);
+    }
+
+    static class Edge implements Comparable<Edge> {
+        int[] cowi, cowj;
+        int i, j;
+        long d;
+        public Edge(int[][] cow, int x, int y) {
+            cowi = cow[x];
+            cowj = cow[y];
+            i = x; j = y;
+            d = distance(cowi, cowj);
+        }
+        @Override
+        public int compareTo(Edge e) { return (int)(d - e.d); }
     }
 
     public static void solve(FastScanner io) throws Exception {
         int N = io.nextInt();
-        long M = io.nextLong();
-
-        long[] F = new long[N];
-        long[] S = new long[N];
+        int[][] cow = new int[N][2];
         for (int i = 0; i < N; i++) {
-            F[i] = io.nextInt();
-            S[i] = io.nextInt();
+            int x = io.nextInt(), y = io.nextInt();
+            cow[i] = new int[]{x, y};
         }
-        
-        long answer = INF;
-        long flavor = 0L;
-        Multiset spicyness = new Multiset();
-        for (int i = 0, j = 0; i < N; i++) {
-            while (j < N && flavor < M) {
-                flavor += F[j];
-                spicyness.add(S[j]);
-                j++;
+
+        List<Edge> edge = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            for (int j = i+1; j < N; j++) {
+                if (i != j) edge.add(new Edge(cow, i, j));
             }
-            if (flavor >= M) answer = Math.min(answer, spicyness.max());
-            flavor -= F[i];
-            spicyness.remove(S[i]);
+        }
+
+        Collections.sort(edge);
+        DSU dsu = new DSU(N);
+        
+        long answer = 0;
+        for (Edge e : edge) {
+            boolean united = dsu.union(e.i, e.j);
+            if (united) answer = Math.max(answer, e.d);
         }
         io.println(answer);
     }
@@ -55,7 +98,7 @@ public class HayFeast {
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        FastScanner io = new FastScanner("hayfeast"); // usaco
+        FastScanner io = new FastScanner("moocast"); // usaco
         // FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
@@ -112,29 +155,6 @@ public class HayFeast {
             b >>= 1;
         }
         return res;
-    }
-    static boolean[] sieve(int n) {
-        boolean[] prime = new boolean[n+1];
-        Arrays.fill(prime, true);
-        prime[0] = prime[1] = false;
-        for (int i = 2; i * i <= n; i++) {
-            if (prime[i]) {
-                for (int j = i * i; j <= n; j += i)
-                    prime[j] = false;
-            }
-        }
-        return prime;
-    }
-    static int[] primeFactorization(int n) {
-        int[] prime = new int[n+1];
-        for (int p = 2; p * p <= n; p++) {
-            while (n % p == 0) {
-                prime[p]++;
-                n /= p;
-            }
-        }
-        if (n > 1) prime[n] = 1; // if n is a large prime
-        return prime;
     }
  
     // ARRAY OPERATIONS

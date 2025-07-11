@@ -1,24 +1,33 @@
-package usaco.gold.dec2016;
+package usaco.gold.disjoint_set_union;
 /**
-Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=669
- 
-The intuition is with N small, we can easily compute pairwise distance in O(N^2).
-We now sort the edges between the cows by distance O(N^2 * log(N^2)).
-The next process is to greedily assign walkie-talkies to connect each cows, until all cows are connected.
-When all cows are connected, the maximum distance will be the cost X we need.abstract.
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=789
 
-Time Complexity: O(N^2 * (log(N^2) + ack(N)))
-where ack(N) is the inverse ackermann function (grow very slowly).
+This problem uses DSU in a quite beautiful way.
+I believe is the key to this problem is sorting the edges and queries.
+
+Note that DSU can effectively create relationships, not destroying them.
+DSU works well when we are counting the number of connected components.
+
+What role does sorting have here?
+Because we are looking at finding the number of videos having relevance >= K.
+Therefore, if we are treating the edges and queries in descending order, 
+we can actually reuses the edges added in previous queries 
+(as they already maintain set of edges with >= current relevance value)
+
+Note that we have to maintain the id of the query to reconstruct the answer.
+
+Time Complexity: O(N + Q * ackerman(N))
+As each query is handled once; each edge is visited once.
 */
 
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
- 
+
 /**
     Nathan
 */
-public class MooCast {
+public class MooTube {
     static class DSU {
         int[] parent;
         int[] sz;
@@ -34,10 +43,10 @@ public class MooCast {
             if (parent[v] == v) return v;
             return parent[v] = find(parent[v]);
         }
-        boolean union(int a, int b) {
+        void union(int a, int b) {
             a = find(a);
             b = find(b);
-            if (a == b) return false;
+            if (a == b) return;
             if (sz[a] < sz[b]) {
                 int tmp = a;
                 a = b;
@@ -45,61 +54,68 @@ public class MooCast {
             }
             parent[b] = a;
             sz[a] += sz[b];
-            return true;
         }
-    }
-
-    static long distance(int[] a, int [] b) {
-        return (a[0] - b[0]) * 1L * (a[0] - b[0]) 
-                + (a[1] - b[1]) * 1L * (a[1] - b[1]);
+        int size(int v) { return sz[find(v)]; }
     }
 
     static class Edge implements Comparable<Edge> {
-        int[] cowi, cowj;
-        int i, j;
-        long d;
-        public Edge(int[][] cow, int x, int y) {
-            cowi = cow[x];
-            cowj = cow[y];
-            i = x; j = y;
-            d = distance(cowi, cowj);
-        }
+        int p, q, r;
+        public Edge(int x, int y, int z) { p = x; q = y; r = z; }
         @Override
-        public int compareTo(Edge e) { return (int)(d - e.d); }
+        public int compareTo(Edge e) { return e.r - r; }
+    }
+
+    static class Query implements Comparable<Query> {
+        int k, v, i;
+        public Query(int x, int y, int z) { k = x; v = y; i = z; }
+        @Override
+        public int compareTo(Query q) { return q.k - k; }
     }
 
     public static void solve(FastScanner io) throws Exception {
-        int N = io.nextInt();
-        int[][] cow = new int[N][2];
-        for (int i = 0; i < N; i++) {
-            int x = io.nextInt(), y = io.nextInt();
-            cow[i] = new int[]{x, y};
+        int N = io.nextInt(), Q = io.nextInt();
+
+        Edge[] edge = new Edge[N-1];
+        for (int i = 0; i < N-1; i++) {
+            int p = io.nextInt()-1, q = io.nextInt()-1;
+            int r = io.nextInt();
+            edge[i] = new Edge(p, q, r);
         }
 
-        List<Edge> edge = new ArrayList<>();
-        for (int i = 0; i < N; i++) {
-            for (int j = i+1; j < N; j++) {
-                if (i != j) edge.add(new Edge(cow, i, j));
-            }
+        Query[] query = new Query[Q];
+        for (int i = 0; i < Q; i++) {
+            int k = io.nextInt();
+            int v = io.nextInt()-1;
+            query[i] = new Query(k, v, i);
         }
 
-        Collections.sort(edge);
+        // descending
+        Arrays.sort(edge);
+        Arrays.sort(query);
+
         DSU dsu = new DSU(N);
-        
-        long answer = 0;
-        for (Edge e : edge) {
-            boolean united = dsu.union(e.i, e.j);
-            if (united) answer = Math.max(answer, e.d);
+        int[] answer = new int[Q];
+
+        int idx = 0;
+        for (Query qu : query) {
+            int v = qu.v;
+            int curk = qu.k;
+            while (idx < N-1 && edge[idx].r >= curk) {
+                dsu.union(edge[idx].p, edge[idx].q);
+                idx++;
+            }
+            answer[qu.i] = dsu.size(v) - 1;
         }
-        io.println(answer);
+
+        for (int x : answer) io.println(x);
     }
 
     /**
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        FastScanner io = new FastScanner("moocast"); // usaco
-        // FastScanner io = new FastScanner();
+        // FastScanner io = new FastScanner("mootube"); // usaco
+        FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {

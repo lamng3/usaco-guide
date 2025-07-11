@@ -1,24 +1,9 @@
-package usaco.silver.feb2013;
+package usaco.gold.sliding_window;
 /**
-Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=245
+Source: AtCoder
+Problem url: https://atcoder.jp/contests/abc194/tasks/abc194_e
 
-This problem is fairly interesting. One might not think of DSU right away :)
-The intuition is that N^2 = 250000, each cell has at most 4 neighbors, making total number of edges
-to be 1M edges. Each one having height difference D. 
-
-The task here is to visit AT LEAST HALF of the cells (rounded up if odd).
-
-We need to find a way to check if a tractor can reach at least half of the cells.
-We now the minimum and maximum values of a grid, thus, we can deduce a maximum difference.
-The intuition here is to use Binary Search On Value, with the value being the difference or the cost of a tractor.
-Given we have a difference, the task now becomes finding connected components where each neighbor cell is no more than diff difference.
-DSU jumps into place here, where it allows us to count the size of the components and effectively retrieve the maxsize among all components.
-I do think DFS works, but it requires some household variable to maintain the size of the component.
-
-Time Complexity: O(N^2 * ack(N^2)) 
-where 1e6 be the maximum difference, ack(.) be the inverse ackermann function.
-Note that the time complexity cost of binary search here can be treated as constant -- log(1e6)
-Each cell has at most 4 neighbors, that is constant too :)
+Time Complexity:
 */
 
 import java.io.*;
@@ -28,91 +13,52 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Tractor {
-    static class DSU {
-        int[] parent;
-        int[] sz;
-        public DSU(int n) {
-            parent = new int[n];
-            sz = new int[n];
-            for (int i = 0; i < n; i++) {
-                parent[i] = i;
-                sz[i] = 1;
+public class MexMin {
+    static class Multiset {
+        TreeMap<Integer, Integer> ms;
+        TreeSet<Integer> mexset;
+        public Multiset(int n) { 
+            ms = new TreeMap<>();
+            mexset = new TreeSet<>();
+            for (int i = 0; i <= n; i++) mexset.add(i);
+        }
+        void add(int x) {
+            ms.merge(x, 1, Integer::sum); 
+            mexset.remove(x);
+        }
+        void remove(int x) {
+            ms.merge(x, -1, Integer::sum);
+            if (ms.get(x) <= 0) {
+                ms.remove(x);
+                mexset.add(x);
             }
         }
-        int find(int v) {
-            if (parent[v] == v) return v;
-            return parent[v] = find(parent[v]);
+        int mex() { 
+            return mexset.first(); 
         }
-        boolean union(int a, int b) {
-            a = find(a);
-            b = find(b);
-            if (a == b) return false;
-            if (sz[a] < sz[b]) {
-                int tmp = a;
-                a = b;
-                b = tmp;
-            }
-            parent[b] = a;
-            sz[a] += sz[b];
-            return true;
-        }
-        int size(int v) { return sz[find(v)]; }
-    }
-
-    public static boolean inrange(int x, int y, int N) {
-        return 0 <= x && x < N && 0 <= y && y < N;
-    }
-    public static int hash(int i, int j) { return i * 1000 + j; }
-
-    public static boolean check(int diff, int[][] grid, int N) {
-        // count components where height difference <= diff
-        // record maxsize
-        int target = (N * N + 1) / 2;
-        int MAXN = 1000 * 1000 + 5;
-        DSU dsu = new DSU(MAXN);
-        int[][] dirs = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
-        int maxsize = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                for (int[] d : dirs) {
-                    int newi = i + d[0], newj = j + d[1];
-                    if (!inrange(newi, newj, N)) continue;
-                    if (Math.abs(grid[newi][newj] - grid[i][j]) > diff) continue;
-                    dsu.union(hash(i, j), hash(newi, newj));
-                    maxsize = Math.max(maxsize, dsu.size(hash(i,j)));
-                }
-            }
-        }
-        return maxsize >= target;
-    }
-
-    public static int search(int dmax, int[][] grid, int N) {
-        int pos = dmax;
-        for (int x = pos; x >= 1; x /= 2) {
-            while (check(pos - x, grid, N)) {
-                pos -= x;
-            }
-        }
-        return pos;
     }
 
     public static void solve(FastScanner io) throws Exception {
-        int N = io.nextInt();
-        int min = oo, max = -1;
+        int N = io.nextInt(), M = io.nextInt();
 
-        int[][] grid = new int[N][N];
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                grid[i][j] = io.nextInt();
-                min = Math.min(min, grid[i][j]);
-                max = Math.max(max, grid[i][j]);
-            }
+        int[] A = new int[N+1];
+        int maxA = 0; 
+        for (int i = 1; i <= N; i++) {
+            A[i] = io.nextInt();
+            maxA = Math.max(maxA, A[i]);
         }
 
-        int dmax = max - min;
-        // difference running from [0, dmax]
-        int answer = search(dmax, grid, N);
+        // small optimization to bypass TLE
+        // by avoid initializing Multiset with large N
+        Multiset ms = new Multiset(maxA+5);
+        for (int i = 1; i <= M; i++) ms.add(A[i]);
+
+        int answer = ms.mex();
+        for (int i = M+1; i <= N; i++) {
+            ms.remove(A[i - M]);
+            ms.add(A[i]);
+            answer = Math.min(answer, ms.mex());
+        }
         io.println(answer);
     }
 
@@ -120,8 +66,8 @@ public class Tractor {
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        FastScanner io = new FastScanner("tractor"); // usaco
-        // FastScanner io = new FastScanner();
+        // FastScanner io = new FastScanner("usaco-problem-name"); // usaco
+        FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {
@@ -156,6 +102,7 @@ public class Tractor {
 		return result;
 	}
     static long abs(long x) { return Math.abs(x); }
+    static int abs(int x) { return Math.abs(x); }
     static int sign(long x) { return x < 0 ? -1 : 1; }
  
     // NUMBER THEORY
@@ -177,6 +124,29 @@ public class Tractor {
             b >>= 1;
         }
         return res;
+    }
+    static boolean[] sieve(int n) {
+        boolean[] prime = new boolean[n+1];
+        Arrays.fill(prime, true);
+        prime[0] = prime[1] = false;
+        for (int i = 2; i * i <= n; i++) {
+            if (prime[i]) {
+                for (int j = i * i; j <= n; j += i)
+                    prime[j] = false;
+            }
+        }
+        return prime;
+    }
+    static int[] primeFactorization(int n) {
+        int[] prime = new int[n+1];
+        for (int p = 2; p * p <= n; p++) {
+            while (n % p == 0) {
+                prime[p]++;
+                n /= p;
+            }
+        }
+        if (n > 1) prime[n] = 1; // if n is a large prime
+        return prime;
     }
  
     // ARRAY OPERATIONS
@@ -270,6 +240,11 @@ public class Tractor {
         }
         boolean contains(int x) { return ms.containsKey(x); }
         boolean isEmpty() { return ms.isEmpty(); }
+        List<Integer> toList() {
+            return ms.entrySet().stream()
+                 .flatMap(e -> Collections.nCopies(e.getValue(), e.getKey()).stream())
+                 .collect(Collectors.toList());
+        }
     }
 
     static class DSUTemplate {

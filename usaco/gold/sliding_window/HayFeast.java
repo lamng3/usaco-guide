@@ -1,7 +1,6 @@
-package usaco.topics.gold.sliding_window;
+package usaco.gold.sliding_window;
 /**
-Source: CSES
-Problem url: https://cses.fi/problemset/task/2428/
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=767#
 
 Time Complexity:
 */
@@ -13,37 +12,41 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class DistinctValuesSubarraysII {
+public class HayFeast {
     static class Multiset {
-        Map<Integer, Integer> ms;
-        public Multiset() { 
-            // using TreeMap would TLE
-            // HashMap for O(1)
-            // although constraints should work for both :)
-            ms = new HashMap<>(); 
-        }
-        void add(int x) { ms.merge(x, 1, Integer::sum); }
-        void remove(int x) {
+        TreeMap<Long, Integer> ms;
+        public Multiset() { ms = new TreeMap<>(); }
+        void add(long x) { ms.merge(x, 1, Integer::sum); }
+        void remove(long x) {
             ms.merge(x, -1, Integer::sum);
             if (ms.get(x) <= 0) ms.remove(x);
         }
-        int size() { return ms.size(); }
-        boolean contains(int x) { return ms.containsKey(x); }
+        long max() { return ms.lastKey(); }
     }
 
     public static void solve(FastScanner io) throws Exception {
-        int n = io.nextInt(), k = io.nextInt();
-        int[] x = new int[n];
-        for (int i = 0; i < n; i++) x[i] = io.nextInt();
-        long answer = 0;
-        Multiset ms = new Multiset();
-        for (int i = 0, j = 0; i < n; i++) {
-            while (j < n && (ms.size() < k || ms.contains(x[j]))) {
-                ms.add(x[j]);
+        int N = io.nextInt();
+        long M = io.nextLong();
+
+        long[] F = new long[N];
+        long[] S = new long[N];
+        for (int i = 0; i < N; i++) {
+            F[i] = io.nextInt();
+            S[i] = io.nextInt();
+        }
+        
+        long answer = INF;
+        long flavor = 0L;
+        Multiset spicyness = new Multiset();
+        for (int i = 0, j = 0; i < N; i++) {
+            while (j < N && flavor < M) {
+                flavor += F[j];
+                spicyness.add(S[j]);
                 j++;
             }
-            answer += (j-i);
-            ms.remove(x[i]);
+            if (flavor >= M) answer = Math.min(answer, spicyness.max());
+            flavor -= F[i];
+            spicyness.remove(S[i]);
         }
         io.println(answer);
     }
@@ -52,8 +55,8 @@ public class DistinctValuesSubarraysII {
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        // FastScanner io = new FastScanner("usaco-problem-name"); // usaco
-        FastScanner io = new FastScanner();
+        FastScanner io = new FastScanner("hayfeast"); // usaco
+        // FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {
@@ -88,7 +91,6 @@ public class DistinctValuesSubarraysII {
 		return result;
 	}
     static long abs(long x) { return Math.abs(x); }
-    static int abs(int x) { return Math.abs(x); }
     static int sign(long x) { return x < 0 ? -1 : 1; }
  
     // NUMBER THEORY
@@ -226,11 +228,6 @@ public class DistinctValuesSubarraysII {
         }
         boolean contains(int x) { return ms.containsKey(x); }
         boolean isEmpty() { return ms.isEmpty(); }
-        List<Integer> toList() {
-            return ms.entrySet().stream()
-                 .flatMap(e -> Collections.nCopies(e.getValue(), e.getKey()).stream())
-                 .collect(Collectors.toList());
-        }
     }
 
     static class DSUTemplate {
