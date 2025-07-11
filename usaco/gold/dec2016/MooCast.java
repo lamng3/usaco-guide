@@ -1,4 +1,15 @@
 package usaco.gold.dec2016;
+/**
+Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=669
+ 
+The intuition is with N small, we can easily compute pairwise distance in O(N^2).
+We now sort the edges between the cows by distance O(N^2 * log(N^2)).
+The next process is to greedily assign walkie-talkies to connect each cows, until all cows are connected.
+When all cows are connected, the maximum distance will be the cost X we need.abstract.
+
+Time Complexity: O(N^2 * (log(N^2) + ack(N)))
+where ack(N) is the inverse ackermann function (grow very slowly).
+*/
 
 import java.io.*;
 import java.util.*;
