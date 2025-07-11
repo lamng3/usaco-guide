@@ -81,6 +81,10 @@ public class WormholeSort {
         }
 
         // descending
+        // if we take from ascending wormholes width
+        // we are assuming that the least width is the smallest one
+        // the original task ask for the least width that MUST be used
+        // so starting from largest width downward make the most sense here
         Arrays.sort(whs);
 
         int answer = oo;

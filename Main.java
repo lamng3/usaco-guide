@@ -6,16 +6,88 @@ import java.util.stream.*;
     Nathan
 */
 public class Main {
-    public static void solve(FastScanner io) throws Exception {
+    static class DSU {
+        int[] parent;
+        int[] sz;
+        public DSU(int n) {
+            parent = new int[n];
+            sz = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                sz[i] = 1;
+            }
+        }
+        int find(int v) {
+            if (parent[v] == v) return v;
+            return parent[v] = find(parent[v]);
+        }
+        boolean union(int a, int b) {
+            a = find(a);
+            b = find(b);
+            if (a == b) return false;
+            if (sz[a] < sz[b]) {
+                int tmp = a;
+                a = b;
+                b = tmp;
+            }
+            parent[b] = a;
+            sz[a] += sz[b];
+            return true;
+        }
+    }
 
+    static class Wormhole implements Comparable<Wormhole> {
+        int a, b, w;
+        public Wormhole(int x, int y, int z) { a = x; b = y; w = z; }
+        @Override
+        public int compareTo(Wormhole wh) { return wh.w - w; }
+    }
+
+    public static void solve(FastScanner io) throws Exception {
+        int N = io.nextInt(), M = io.nextInt();
+        int[] p = new int[N];
+
+        boolean sorted = true;
+        for (int i = 0; i < N; i++) {
+            p[i] = io.nextInt()-1;
+            if (p[i] != i) sorted = false;
+        }
+        if (sorted) {
+            io.println(-1);
+            return;
+        }
+        
+        Wormhole[] whs = new Wormhole[M];
+        for (int i = 0; i < M; i++) {
+            int a = io.nextInt()-1, b = io.nextInt()-1;
+            int w = io.nextInt();
+            whs[i] = new Wormhole(a, b, w);
+        }
+        Arrays.sort(whs); // descending
+
+        DSU dsu = new DSU(N);
+
+        
+        int answer = oo;
+        int idx = 0;
+        for (int i = 0; i < N; i++) {
+            while (idx < N && dsu.find(p[i]) != dsu.find(i)) {
+                Wormhole wh = whs[idx];
+                int a = wh.a, b = wh.b, w = wh.w;
+                dsu.union(a, b);
+                answer = Math.min(answer, w); // least wide wormhole
+                idx++;
+            }
+        }
+        io.println(answer);
     }
 
     /**
         MAIN
     */
     public static void main(String[] args) throws Exception {
-        FastScanner io = new FastScanner("wormsort"); // usaco
-        // FastScanner io = new FastScanner();
+        // FastScanner io = new FastScanner("usaco-problem-name"); // usaco
+        FastScanner io = new FastScanner();
 		int t = 1;
         // t = io.nextInt(); // t testcases
 		while (t-->0) {
