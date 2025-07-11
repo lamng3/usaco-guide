@@ -1,3 +1,11 @@
+package usaco.topics.dynamic_programming;
+/**
+Source: AtCoder
+Problem url: https://atcoder.jp/contests/abc321/tasks/abc321_f
+
+Time Complexity: O(QK)
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +13,40 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class SubsetSumQuery {
     public static void solve(FastScanner io) throws Exception {
-        
+        int Q = io.nextInt(), K = io.nextInt();
+        int modulo = 998244353;
+        long[] dp = new long[K+1];
+        dp[0] = 1;
+        for (int i = 0; i < Q; i++) {
+            String[] line = io.nextLine().split(" ");
+            String type = line[0];
+            int x = Integer.parseInt(line[1]);
+            if (type.equals("+")) {
+                // e.g. add ball 5 -> dp[10] += dp[5] (count ball 5)
+                // then dp[15] += dp[10] (count ball 5 again)
+                // in this way, we have already double counted the ball 5
+                for (int j = K; j >= x; j--) {
+                    dp[j] += dp[j-x];
+                    dp[j] %= modulo;
+                }
+            }
+            else {
+                // when we remove a ball, we remove bottom up
+                // to avoid double removing
+                // e.g. combinations (4+6) not having ball 5 to remove, 
+                // but sums up to 10
+                // so dp[15] -= dp[10] would also eliminate those
+                // instead, dp[10] -= dp[5] will ensure the remaining combinations
+                for (int j = x; j <= K; j++) {
+                    // dp[j] -= dp[j-x] may overflow
+                    dp[j] += modulo - dp[j-x];
+                    dp[j] %= modulo;
+                }
+            }
+            io.println(dp[K]);
+        }
     }
 
     /**
