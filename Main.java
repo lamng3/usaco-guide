@@ -161,31 +161,21 @@ public class Main {
     /**
         DATA STRUCTURES TEMPLATES
     */
-    static class MultisetTemplate {
-        TreeMap<Integer, Integer> ms;
-		public MultisetTemplate() { ms = new TreeMap<>(); }
-        void add(int x) { ms.put(x, ms.getOrDefault(x,0) + 1); }
-        void remove(int x) {
-            int c = ms.getOrDefault(x,0) - 1;
-            if (c > 0) ms.put(x, c);
-            else ms.remove(x);
+    static abstract class Multiset<T> {
+        protected final TreeMap<T, Integer> multiset;
+		public Multiset() { multiset = new TreeMap<>(); }
+        public void add(T x) { multiset.merge(x, 1, Integer::sum); }
+        public void remove(T x) {
+            multiset.merge(x, -1, Integer::sum); 
+            if (multiset.get(x) <= 0) multiset.remove(x);
         }
-        int min() { return ms.firstKey(); }
-        int max() { return ms.lastKey(); }
-        int countLE(int x) {
-            // headMap(x, true) gives keys <= x
-            return ms.headMap(x, true)
-                    .values()
-                    .stream()
-                    .mapToInt(Integer::intValue)
-                    .sum();
+        public T min() { return multiset.firstKey(); }
+        public T max() { return multiset.lastKey(); }
+        public int countLE(T x) { // count less than or equal
+            return multiset.headMap(x, true).values()
+                    .stream().mapToInt(Integer::intValue).sum();
         }
-        int count() {
-            return ms.values()
-                    .stream()
-                    .mapToInt(Integer::intValue)
-                    .sum();
-        }
+        public int count() { return multiset.values().stream().mapToInt(Integer::intValue).sum(); }
     }
 
     static abstract class DSU {
