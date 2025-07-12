@@ -186,99 +186,77 @@ public class Main {
                     .mapToInt(Integer::intValue)
                     .sum();
         }
-        boolean contains(int x) { return ms.containsKey(x); }
-        boolean isEmpty() { return ms.isEmpty(); }
-        List<Integer> toList() {
-            return ms.entrySet().stream()
-                 .flatMap(e -> Collections.nCopies(e.getValue(), e.getKey()).stream())
-                 .collect(Collectors.toList());
-        }
     }
 
-    static class DSUTemplate {
-        int[] parent;
-        int[] sz;
-        public DSUTemplate(int n) {
+    static abstract class DSU {
+        protected final int[] parent;
+        protected final int[] size;
+        public DSU(int n) {
             parent = new int[n];
-            sz = new int[n];
+            size = new int[n];
             for (int i = 0; i < n; i++) {
                 parent[i] = i;
-                sz[i] = 1;
+                size[i] = 1;
             }
         }
         public int find(int v) {
-            if (parent[v] == v) return parent[v];
-            return parent[v] = find(parent[v]);
+            return parent[v] == v ? v : (parent[v] = find(parent[v]));
         }
-        public void union(int a, int b) {
+        public boolean union(int a, int b) {
             a = find(a);
             b = find(b);
-            if (a != b) {
-                if (sz[a] < sz[b]) {
-                    int tmp = a;
-                    a = b;
-                    b = tmp;
-                }
-                parent[b] = a;
-                sz[a] += sz[b];
-            }
+            if (a == b) return false;
+            if (size[a] < size[b]) swap(a, b);
+            parent[b] = a;
+            size[a] += size[b];
+            return true;
+        }
+        public int size(int v) {
+            return size[find(v)];
+        }
+        public boolean connected(int a, int b) {
+            return find(a) == find(b);
         }
     }
 
-    static class SegmentTreeTemplate { // example: max query
-        static int[] st;
-        static int[] lazy;
-        static int[] a;
-        public SegmentTreeTemplate(int N, int[] a) {
-            this.st = new int[4*N];
-            this.lazy = new int[4*N];
+    static abstract class SegmentTree { 
+        protected final int[] st;
+        protected final int[] a;
+        public SegmentTree(int n, int[] a) {
+            this.st = new int[4*n];
             this.a = a;
         }
-        static void build(int v, int tl, int tr) {
+        protected abstract int combine(int left, int right);
+        public void build(int v, int tl, int tr) {
             if (tl == tr) {
                 st[v] = a[tl];
                 return;
             }
-            int tm = (tl + tr) / 2;
+            int tm = (tl + tr) >>> 1;
             build(v*2+1, tl, tm);
             build(v*2+2, tm+1, tr);
-            st[v] = operator(st[v*2+1], st[v*2+2]);
+            st[v] = combine(st[v*2+1], st[v*2+2]);
         }
-        static int operator(int left, int right) { 
-            return Math.max(left, right); 
-        }
-        // lazy propagation
-        static void push(int v) {
-            // push down operation
-            st[v*2+1] += lazy[v];
-            st[v*2+2] += lazy[v];
-            lazy[v*2+1] += lazy[v];
-            lazy[v*2+2] += lazy[v];
-            lazy[v] = 0;
-        }
-        static void update(int v, int tl, int tr, int pos, int addend) {
+        protected abstract int apply(int x, int u);
+        public void update(int v, int tl, int tr, int pos, int u) {
             if (tl > tr) return;
             if (tl == tr) {
-                st[v] += addend;
-                lazy[v] += addend;
+                st[v] = apply(st[v], u);
                 return;
             }
-            int tm = (tl + tr) / 2;
-            if (pos <= tm) update(v*2+1, tl, tm, pos, addend);
-            else update(v*2+2, tm+1, tr, pos, addend);
-            st[v] = operator(st[v*2+1], st[v*2+2]);
+            int tm = (tl + tr) >>> 1;
+            if (pos <= tm) update(v*2+1, tl, tm, pos, u);
+            else update(v*2+2, tm+1, tr, pos, u);
+            st[v] = combine(st[v*2+1], st[v*2+2]);
         }
-        static int query(int v, int tl, int tr, int l, int r) { 
-            if (l > r) return -oo;
-            if (l <= tl && tr <= r) {
-                return st[v];
-            }
-            push(v);
-            int tm = (tl + tr) / 2;
-            return operator(
-                query(v*2+1, tl, tm, l, Math.min(r, tm)),
-                query(v*2+2, tm+1, tr, Math.max(l, tm+1), r)
-            );
+        protected abstract int identity();
+        public int query(int v, int tl, int tr, int l, int r) {
+            if (l > r) return identity();
+            if (l <= tl && tr <= r) return st[v];
+            int tm = (tl + tr) >>> 1;
+            int left = query(v*2+1, tl, tm, l, Math.min(r, tm));
+            int right = query(v*2+2, tm+1, tr, Math.max(l, tm+1), r);
+            return combine(left, right);
         }
     }
  
