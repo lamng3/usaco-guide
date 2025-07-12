@@ -120,12 +120,12 @@ public class Main {
     static void sort(int[] a) { Arrays.sort(a); }
     static void sort(long[] a) { Arrays.sort(a); }
     static <T extends Comparable<? super T>> void sort(List<T> a) { Collections.sort(a); }
-    static void ruffle_sort(int[] a) { shuffle(a); sort(a); }
+    static void ruffleSort(int[] a) { shuffle(a); sort(a); }
  
     // FACTORIALS & nCk
 	static long[] factorials = new long[2_000_005];
 	static long[] inverseFactorials = new long[2_000_005];
-	static void precompute_factorials() {
+	static void precomputeFactorials() {
         int n = factorials.length;
 		factorials[0] = 1;
 		for (int i = 1; i < factorials.length; i++) {
@@ -145,7 +145,7 @@ public class Main {
     static String repeat(String s, int count) { return s.repeat(count); }
 
     // BINARY SEARCH
-    static int[] binary_search(int x, int[] a) {
+    static int[] binarySearch(int x, int[] a) {
         // looking for transition point
         int l = -1, r = a.length-1;
         while (r - l > 1) {
