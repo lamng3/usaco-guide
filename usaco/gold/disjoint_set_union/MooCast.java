@@ -1,5 +1,6 @@
 package usaco.gold.disjoint_set_union;
 /**
+Source: USACO
 Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=669
  
 The intuition is with N small, we can easily compute pairwise distance in O(N^2).

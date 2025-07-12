@@ -1,7 +1,7 @@
 package usaco.gold.sliding_window;
 /**
+Source: USACO
 Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=767#
-
 Time Complexity:
 */
 

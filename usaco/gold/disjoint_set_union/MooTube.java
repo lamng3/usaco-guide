@@ -1,5 +1,6 @@
 package usaco.gold.disjoint_set_union;
 /**
+Source: USACO
 Problem url: https://usaco.org/index.php?page=viewproblem2&cpid=789
 
 This problem uses DSU in a quite beautiful way.

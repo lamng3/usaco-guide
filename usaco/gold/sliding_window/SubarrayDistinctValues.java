@@ -2,7 +2,6 @@ package usaco.gold.sliding_window;
 /**
 Source: CSES
 Problem url: https://cses.fi/problemset/task/2428/
-
 Time Complexity:
 */
 

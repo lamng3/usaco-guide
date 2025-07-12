@@ -1,9 +1,7 @@
-package usaco.gold.dynamic_programming;
+package usaco.gold.knapsack_dp;
 /**
-Chapter: Knapsack DP
 Source: AtCoder
 Problem url: https://atcoder.jp/contests/abc321/tasks/abc321_f
-
 Time Complexity: O(QK)
 */
 

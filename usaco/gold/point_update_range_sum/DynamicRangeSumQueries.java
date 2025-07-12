@@ -2,7 +2,6 @@ package usaco.gold.point_update_range_sum;
 /**
 Source: CSES
 Problem url: https://cses.fi/problemset/task/1648/
-
 Time Complexity:
 */
 

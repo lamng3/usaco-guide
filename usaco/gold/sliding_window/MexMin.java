@@ -2,7 +2,6 @@ package usaco.gold.sliding_window;
 /**
 Source: AtCoder
 Problem url: https://atcoder.jp/contests/abc194/tasks/abc194_e
-
 Time Complexity:
 */
 
