@@ -263,7 +263,6 @@ public class Main {
     static class FastScanner extends PrintWriter {
         private BufferedReader br;
         private StringTokenizer st;
-		
 		// standard input
         public FastScanner() { this(System.in, System.out); }
 		public FastScanner(InputStream i, OutputStream o) {
@@ -277,7 +276,6 @@ public class Main {
 			st = new StringTokenizer("");
             br = new BufferedReader(new FileReader(problemName + ".in"));
         }
- 
         // returns null if no more input
         public String next() {
             try {
