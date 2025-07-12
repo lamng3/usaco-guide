@@ -211,9 +211,11 @@ public class Main {
 
     static abstract class SegmentTree { 
         protected final int[] st;
+        protected final int[] lazy;
         protected final int[] a;
         public SegmentTree(int n, int[] a) {
             this.st = new int[4*n];
+            this.lazy = new int[4*n];
             this.a = a;
         }
         protected abstract int combine(int left, int right);
@@ -227,11 +229,14 @@ public class Main {
             build(v*2+2, tm+1, tr);
             st[v] = combine(st[v*2+1], st[v*2+2]);
         }
-        protected abstract int apply(int x, int u);
+        protected abstract int update(int x, int u);
+        protected abstract int updateLazy(int x, int u);
+        protected abstract void push(int v); // lazy propagation
         public void update(int v, int tl, int tr, int pos, int u) {
             if (tl > tr) return;
             if (tl == tr) {
-                st[v] = apply(st[v], u);
+                st[v] = update(st[v], u);
+                lazy[v] = updateLazy(lazy[v], u);
                 return;
             }
             int tm = (tl + tr) >>> 1;
@@ -243,6 +248,7 @@ public class Main {
         public int query(int v, int tl, int tr, int l, int r) {
             if (l > r) return identity();
             if (l <= tl && tr <= r) return st[v];
+            push(v);
             int tm = (tl + tr) >>> 1;
             int left = query(v*2+1, tl, tm, l, Math.min(r, tm));
             int right = query(v*2+2, tm+1, tr, Math.max(l, tm+1), r);
