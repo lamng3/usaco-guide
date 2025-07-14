@@ -272,7 +272,13 @@ public class Main {
 
         sum(a,b) = sum(1,b) - sum(1,a-1) for a > 1
 
-        sum() can be extrapolated to min() and max()
+        it is obvious there is no easy way to find minimum in range [l,r] for fenwick tree
+            * FT can only answer min [0,r], update(s) would make it a disaster
+            * MATH explanation :) 
+                - because min() together with the set of integers doesn't form a group, 
+                as there are no inverse elements.
+            * "Efficient Range Minimum Queries using Binary Indexed Trees" does provide min for BIT,
+                but complex to be implemented in CP setting
         */
         int[] ft; // fenwick tree
         int[] a; // original array
@@ -287,7 +293,7 @@ public class Main {
             a[k] += u;
             for (; k <= ft.length; k += lsone(k)) ft[k] += u;
         }
-        int sum(int k) { // range sum query
+        int sum(int k) {
             int s = 0;
             for (; k > 0; k -= lsone(k)) s += ft[k];
             return s;
