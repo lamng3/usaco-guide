@@ -1,3 +1,13 @@
+package usaco.gold.point_update_range_sum;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1648/
+
+Fenwick Tree is used here.
+
+Time Complexity:
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +15,46 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class FT_DynamicRangeSumQueries {
+    static class SumFenwickTree {
+        long[] ft;
+        long[] a;
+        public SumFenwickTree(int n) {
+            ft = new long[n+1];
+            a = new long[n+1];
+        }
+        void set(int k, long u) { add(k, u - a[k]); }
+        void add(int k, long u) {
+            a[k] += u;
+            for (; k < ft.length; k += lsone(k)) ft[k] += u;
+        }
+        long sum(int k) {
+            long res = 0;
+            for (; k > 0; k -= lsone(k)) res += ft[k];
+            return res;
+        }
+        int lsone(int x) { return x & (-x); }
+    }
+
     public static void solve(FastScanner io) throws Exception {
-        
+        int n = io.nextInt(), q = io.nextInt();
+        SumFenwickTree ft = new SumFenwickTree(n);
+        long[] x = new long[n+1];
+        for (int i = 1; i <= n; i++) {
+            x[i] = io.nextLong();
+            ft.set(i, x[i]);
+        }
+        for (int i = 0; i < q; i++) {
+            int t = io.nextInt();
+            if (t == 1) {
+                int k = io.nextInt(), u = io.nextInt();
+                ft.set(k, u);
+            }
+            else if (t == 2) {
+                int a = io.nextInt(), b = io.nextInt();
+                io.println(ft.sum(b) - ft.sum(a-1));
+            }
+        }
     }
 
     /**
@@ -262,17 +309,11 @@ public class Main {
             1. point update
             2. range sum query (prefix sum)
         note: one-indexed (zero is skipped)
-
-        ft[k] = sum(k - p(k) + 1, k)
+        ft[k] = query(k - p(k) + 1, k)
         p(k) = largest power of 2 that divides k
-
         use least significant one (lsone) to update/calc sum
-            * lsone(k) = k & (-k)
             * defined in CP2 (Steven & Helix)
-
-        sum(a,b) = sum(1,b) - sum(1,a-1) for a > 1
-
-        sum() can be extrapolated to min() and max()
+        query(a,b) = query(1,b) - query(1,a-1) for a > 1
         */
         int[] ft; // fenwick tree
         int[] a; // original array
@@ -287,10 +328,10 @@ public class Main {
             a[k] += u;
             for (; k <= ft.length; k += lsone(k)) ft[k] += u;
         }
-        int sum(int k) { // range sum query
-            int s = 0;
-            for (; k > 0; k -= lsone(k)) s += ft[k];
-            return s;
+        int query(int k) { // range sum query
+            int res = 0;
+            for (; k > 0; k -= lsone(k)) res += ft[k];
+            return res;
         }
         int lsone(int x) { // least significant one
             return x & (-x);

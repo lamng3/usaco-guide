@@ -2,6 +2,9 @@ package usaco.gold.point_update_range_sum;
 /**
 Source: CSES
 Problem url: https://cses.fi/problemset/task/1648/
+
+Segment Tree is used here.
+
 Time Complexity:
 */
 
@@ -12,7 +15,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class DynamicRangeSumQueries {
+public class ST_DynamicRangeSumQueries {
     static class SegmentTree {
         long[] st, a;
         public SegmentTree(int n, long[] a) {
