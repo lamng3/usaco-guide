@@ -1,3 +1,9 @@
+package usaco.platinum.range_queries_2d;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1739
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +11,77 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class ForestQueriesII {
+    static class SumFenwickTree2D {
+        int[][] ft;
+        int[][] a;
+        int n, m;
+        public SumFenwickTree2D(int n, int m) {
+            ft = new int[n+1][m+1];
+            a = new int[n+1][m+1];
+            this.n = n;
+            this.m = m;
+        }
+        int get(int x, int y) {
+            return a[x][y];
+        }
+        void set(int x, int y, int u) {
+            add(x, y, u - a[x][y]);
+        }
+        void add(int x, int y, int u) {
+            a[x][y] += u;
+            // avoid updating x and y in-place
+            for (int i = x; i <= n; i += lsone(i)) {
+                for (int j = y; j <= m; j += lsone(j)) {
+                    ft[i][j] += u;
+                }
+            }
+        }
+        int sum(int x, int y) {
+            // sum of rectangle [0,0] - [x,y]
+            int s = 0;
+            for (int i = x; i > 0; i -= lsone(i)) {
+                for (int j = y; j > 0; j -= lsone(j)) {
+                    s += ft[i][j];
+                }
+            }
+            return s;
+        }
+        int area(int x1, int y1, int x2, int y2) {
+            int s = 0;
+            s += sum(x2, y2);
+            s -= sum(x1-1, y2);
+            s -= sum(x2, y1-1);
+            s += sum(x1-1, y1-1);
+            return s;
+        }
+        int lsone(int k) {
+            return k & (-k);
+        }
+    }
+
     public static void solve(FastScanner io) throws Exception {
-        
+        int n = io.nextInt(), q = io.nextInt();
+        SumFenwickTree2D ft = new SumFenwickTree2D(n, n);
+        for (int i = 1; i <= n; i++) {
+            char[] ch = io.nextLine().toCharArray();
+            for (int j = 1; j <= n; j++) {
+                if (ch[j-1] == '.') ft.set(i, j, 0);
+                else ft.set(i, j, 1);
+            }
+        }
+        for (int i = 0; i < q; i++) {
+            int t = io.nextInt();
+            if (t == 1) {
+                int x = io.nextInt(), y = io.nextInt();
+                ft.set(x, y, 1 - ft.get(x, y)); // change state
+            }
+            else if (t == 2) {
+                int x1 = io.nextInt(), y1 = io.nextInt();
+                int x2 = io.nextInt(), y2 = io.nextInt();
+                io.println(ft.area(x1, y1, x2, y2));
+            }
+        }
     }
 
     /**
@@ -293,7 +367,7 @@ public class Main {
             a[k] += u;
             for (; k <= ft.length; k += lsone(k)) ft[k] += u;
         }
-        void rangeAdd(int l, int r, int u) {
+        void range_add(int l, int r, int u) {
             // difference-array (or "prefix‑difference") trick
             add(l, u);
             add(r+1, -u);
@@ -321,8 +395,6 @@ public class Main {
             add(x, y, u - a[x][y]);
         }
         void add(int x, int y, int u) {
-            // note: avoid update x and y in-place
-            //       by setting i = x and j = y
             a[x][y] += u;
             for (int i = x; i <= n; i += lsone(i)) {
                 for (int j = y; j <= m; j += lsone(j)) {
@@ -339,7 +411,7 @@ public class Main {
             }
             return s;
         }
-        int rectangleSum(int x1, int y1, int x2, int y2) {
+        int area(int x1, int y1, int x2, int y2) {
             int s = 0;
             s += sum(x2, y2);
             s -= sum(x2, y1-1);
