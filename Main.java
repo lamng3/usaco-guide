@@ -279,6 +279,8 @@ public class Main {
                 as there are no inverse elements.
             * "Efficient Range Minimum Queries using Binary Indexed Trees" does provide min for BIT,
                 but complex to be implemented in CP setting
+
+        extra theoretical read: TopCoder Binary Indexed Trees
         */
         int[] ft; // fenwick tree
         int[] a; // original array
