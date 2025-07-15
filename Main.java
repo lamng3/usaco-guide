@@ -155,6 +155,7 @@ public class Main {
         }
         // l = last element >= x (-1 if no such eleemnt) -- lowerbound
         // r = first element > x (n if no such element) -- upperbound
+        // a[l] <= x < a[r]
         return new int[]{l,r};
     }
  
