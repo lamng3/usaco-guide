@@ -153,7 +153,7 @@ public class Main {
             if (x < a[mid]) r = mid;
             else l = mid;
         }
-        // l = last element >= x (-1 if no such eleemnt) -- lowerbound
+        // l = last element >= x (-1 if no such element) -- lowerbound
         // r = first element > x (n if no such element) -- upperbound
         // a[l] <= x < a[r]
         return new int[]{l,r};
