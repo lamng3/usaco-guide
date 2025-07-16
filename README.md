@@ -10,6 +10,6 @@ The only guaranteed way to compute `R/2 (mod M)` from `r = R (mod M)` is to mult
 
 Since `M = 1_000_000_007` is prime, `2^{-1} = 500_000_004 (mod M)`
 
-Errichto shared a very useful and generalized video on [Computations Modulo P in Competitive Programming](https://youtu.be/-OPohCQqi_E?si=rTvnfOQR-EzMqAFH).
+[Errichto](https://codeforces.com/profile/Errichto) shared a very useful and generalized video on [Computations Modulo P in Competitive Programming](https://youtu.be/-OPohCQqi_E?si=rTvnfOQR-EzMqAFH).
 
 Exercise: [CSES Two Sets II](https://cses.fi/problemset/task/1093/)
