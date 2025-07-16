@@ -1,3 +1,13 @@
+package usaco.gold.knapsack_dp;
+/**
+Source: CSES
+
+In this problem, we learn about a mod trick. 
+Note that dividing after mod is not the same as dividing integers.
+
+Problem url: https://cses.fi/problemset/task/1093/
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -7,7 +17,29 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
+        int mod = mod_prime;
+        int n = io.nextInt();
+        int x = (n+1) * n / 2;
+
+        if (x % 2 != 0) {
+            io.println(0);
+            return;
+        }
+        x /= 2;
         
+        int[] dp = new int[x+1];
+        dp[0] = 1;
+        for (int c = 1; c <= n; c++) {
+            for (int i = x; i >= c; i--) {
+                dp[i] += dp[i-c];
+                dp[i] %= mod;
+            }
+        }
+
+        // mod trick
+        // divide by 2 after mod is not the same as integer-dividing by 2
+        long answer = (long)dp[x] * inv2 % mod;
+        io.println(answer);
     }
 
     /**
