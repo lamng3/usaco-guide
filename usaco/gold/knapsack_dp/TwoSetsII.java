@@ -15,7 +15,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class TwoSetsII {
     public static void solve(FastScanner io) throws Exception {
         int mod = mod_prime;
         int n = io.nextInt();
