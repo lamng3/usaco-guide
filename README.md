@@ -14,9 +14,9 @@ Since `M = 1_000_000_007` is prime, `2^{-1} = 500_000_004 (mod M)`. A more gener
 
 [Errichto](https://codeforces.com/profile/Errichto) shared a very useful and generalized video on [Computations Modulo P in Competitive Programming](https://youtu.be/-OPohCQqi_E?si=rTvnfOQR-EzMqAFH).
 
-[CP-Algo's Modular Multiplicative Inverse](https://cp-algorithms.com/algebra/module-inverse.html)
+CP-Algorithms: [Modular Multiplicative Inverse](https://cp-algorithms.com/algebra/module-inverse.html)
 
-[USACO-Guide's Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modular-inverse)
+USACO Guide: [Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modular-inverse).
 
 ### Exercise
-* [CSES Two Sets II](https://cses.fi/problemset/task/1093/).
+* [CSES Two Sets II](https://cses.fi/problemset/task/1093/)
