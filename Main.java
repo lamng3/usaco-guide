@@ -7,27 +7,7 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
-        int mod = mod_prime;
-        int n = io.nextInt();
-        int maxsum = (n+1) * n / 2;
-        if (maxsum % 2 != 0) {
-            io.println(0);
-            return;
-        } 
-        int k = maxsum / 2;
-        int[] dp = new int[k+1];
-        dp[0] = 1;
-        for (int i = 1; i <= n; i++) {
-            for (int j = k; j >= i; j--) {
-                dp[j] += dp[j-i];
-                dp[j] %= mod;
-            }
-        }
-
-        // mod trick
-        // double counting
-        long answer = (long) dp[k] * inv2 % mod;
-        io.println(answer);
+        
     }
 
     /**

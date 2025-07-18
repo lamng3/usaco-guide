@@ -10,10 +10,13 @@ The only guaranteed way to compute `R/2 (mod M)` from `r = R (mod M)` is to mult
 
 Since `M = 1_000_000_007` is prime, `2^{-1} = 500_000_004 (mod M)`. A more generalized way to calculate division of any number in modular setting is `inv(x) = pow(x, mod-2, mod)`.
 
+### See More
+
 [Errichto](https://codeforces.com/profile/Errichto) shared a very useful and generalized video on [Computations Modulo P in Competitive Programming](https://youtu.be/-OPohCQqi_E?si=rTvnfOQR-EzMqAFH).
 
-[CP-Algo/Modular Multiplicative Inverse](https://cp-algorithms.com/algebra/module-inverse.html)
+[CP-Algo's Modular Multiplicative Inverse](https://cp-algorithms.com/algebra/module-inverse.html)
 
-[USACO-Guide/Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modular-inverse)
+[USACO-Guide's Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modular-inverse)
 
-Exercise: [CSES Two Sets II](https://cses.fi/problemset/task/1093/).
+### Exercise
+* [CSES Two Sets II](https://cses.fi/problemset/task/1093/).
