@@ -358,6 +358,63 @@ public class Main {
             return k & (-k);
         }
     }
+
+    static abstract class OrderStatisticTree {
+        /**
+            OST is a variant of BST that supports
+                * insert(x) / delete(x)
+                * rank(x): number of elements <= x
+                * select(k): find the kth min/max element
+
+            There are multiple ways to implement OST. 
+            I am inspired by BIT (binary-indexed tree), so I build OST based on that.
+
+            Maximum number of nodes is 4*N. Proofs are similar to SegmentTree.
+        */
+        int[] bit;
+        int[] a;
+        public OrderStatisticTree(int n, int[] a) {
+            bit = new int[n+1];
+            this.a = a;
+        }
+        public int rank(int i) {
+            return sum(i); // sum of elements from start to index i
+        }
+        public int select(int k) {
+            // binary-jumping
+            int i = 0, n = bit.length-1;
+            int mask = Integer.highestOneBit(n);
+            for (; mask > 0; mask >>= 1) {
+                int next = i + mask;
+                if (next <= n && bit[next] < k) {
+                    i = next;
+                    k -= bit[next];
+                }
+            }
+            // here, i is the largest position where prefix-sum < k
+            // final check (when k > n)
+            return (i + 1 <= n) ? i + 1 : -1;
+        }
+        public void insert(int x) {
+            add(x, 1); // increase rank of elements > x
+        }
+        public void delete(int x) {
+            add(x, -1); // decrease rank of elements > x
+        }
+        private void add(int i, int u) {
+            for (; i < bit.length; i += lsone(i)) {
+                bit[i] += u;
+            }
+        }
+        private int sum(int i) {
+            int s = 0;
+            for (; i > 0; i -= lsone(i)) s += bit[i];
+            return s;
+        }
+        private int lsone(int k) {
+            return k & (-k);
+        }
+    }
  
     /**
         PRINTING 

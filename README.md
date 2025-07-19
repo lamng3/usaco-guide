@@ -20,3 +20,25 @@ USACO Guide: [Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modu
 
 ### Exercise
 * [CSES Two Sets II](https://cses.fi/problemset/task/1093/)
+
+## Order Statistic Tree
+
+OST is a variant of BST that supports:
+- `rank(x)`: count number of elements < x
+- `select(k)`: find the kth smallest element
+
+Both operations can be performed in `O(log n)` worst case time when a self-balancing tree is used as the base data structure.
+
+To turn a regular search tree into an order statistic tree, the nodes of the tree need to store one additional value, which is the size of the subtree rooted at that node.
+
+Binary Jumping is used on BIT tree array, as each node at index `i` can have `i*2` and `i*2+1` as children nodes.
+
+Obviously, the statement of [Inversion Counting](https://www.geeksforgeeks.org/dsa/inversion-count-in-array-using-merge-sort/) problem is quite simple. Yet, it takes some study to tackle it.
+
+### See More
+
+GFG: [Order statistic tree using fenwick tree (BIT)](https://www.geeksforgeeks.org/dsa/order-statistic-tree-using-fenwick-tree-bit/)
+
+GFG: [Inversion Counting](https://www.geeksforgeeks.org/dsa/inversion-count-in-array-using-merge-sort/)
+
+USACO: [Binary Jumping](https://usaco.guide/plat/binary-jump?lang=cpp)
