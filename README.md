@@ -21,6 +21,18 @@ USACO Guide: [Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modu
 ### Exercise
 * [CSES Two Sets II](https://cses.fi/problemset/task/1093/)
 
+## Fenwick Tree
+
+A Fenwick tree can support the following range operations:
+
+- Point Update and Range Query
+- Range Update and Point Query
+- Range Update and Range Query
+
+### See More
+
+CP-Algorithms: [Fenwick Tree](https://cp-algorithms.com/data_structures/fenwick.html)
+
 ## Order Statistic Tree
 
 OST is a variant of BST that supports:

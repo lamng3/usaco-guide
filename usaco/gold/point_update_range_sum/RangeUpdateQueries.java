@@ -1,3 +1,15 @@
+package usaco.gold.point_update_range_sum;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1651
+This is a range update point query problem using Fenwick Tree.
+
+Note that in this case, Fenwick Tree is storing deltas, as represented in difference-array trick.
+We should keep in mind about what Fenwick Tree is storing in the first place
+
+If we are trying to add(i, x[i]), we are only adding a single x[i] value to index i.
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +17,62 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class RangeUpdateQueries {
+    static class CustomFenwickTree {
+        long[] ft;
+        public CustomFenwickTree(int n) {
+            ft = new long[n+1];
+        }
+        void add(int i, long u) {
+            for (; i < ft.length; i += i & (-i)) {
+                ft[i] += u;
+            }
+        }
+        void range_add(int a, int b, long u) {
+            // difference-array trick
+            add(a, u);
+            add(b+1, -u);
+        }
+        long point_query(int i) {
+            long s = 0;
+            for (; i > 0; i -= i & (-i)) {
+                s += ft[i];
+            }
+            return s;
+        }
+    }
+
     public static void solve(FastScanner io) throws Exception {
+        int n = io.nextInt(), q = io.nextInt();
+        // fenwick tree
+        CustomFenwickTree ft = new CustomFenwickTree(n);
         
+        long[] x = new long[n+1];
+        for (int i = 1; i <= n; i++) {
+            x[i] = io.nextLong();
+
+            // ft.add(i, x[i]) is not correct
+            ft.range_add(i, i, x[i]);
+        }
+
+        // reducing O(qn) to O(qlogn)
+        for (int i = 0; i < q; i++) {
+            int t = io.nextInt();
+            if (t == 1) {
+                int a = io.nextInt(), b = io.nextInt();
+                long u = io.nextLong();
+
+                // O(qn) -- TLE
+                // for (int j = a; j <= b; j++) ft.add(j, u);
+                
+                // O(qlogn)
+                ft.range_add(a, b, u);
+            }
+            else if (t == 2) {
+                int k = io.nextInt();
+                io.println(ft.point_query(k));
+            }
+        }
     }
 
     /**
