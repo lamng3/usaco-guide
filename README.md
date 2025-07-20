@@ -29,7 +29,7 @@ A Fenwick tree can support the following range operations:
 - Range Update and Point Query
 - Range Update and Range Query
 
-In some cases, we need to perform [Coordinate Compression]() to avoid MLE (memory limit exceeded). MLE happens quite often with large array values limit but within limit array size.
+In some cases, we need to perform [Coordinate Compression]() to avoid MLE (memory limit exceeded). MLE happens quite often with large array values limit but small array size limit.
 
 ### See More
 
