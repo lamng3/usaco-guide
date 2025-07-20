@@ -29,9 +29,15 @@ A Fenwick tree can support the following range operations:
 - Range Update and Point Query
 - Range Update and Range Query
 
+In some cases, we need to perform [Coordinate Compression]() to avoid MLE (memory limit exceeded). MLE happens quite often with large array values limit but within limit array size.
+
 ### See More
 
 CP-Algorithms: [Fenwick Tree](https://cp-algorithms.com/data_structures/fenwick.html)
+
+### Exercise
+
+* [List Removals](https://cses.fi/problemset/task/1749/): This is basically an OST implementation, requiring an observation at first about the ranks.
 
 ## Order Statistic Tree
 

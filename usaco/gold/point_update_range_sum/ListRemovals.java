@@ -1,3 +1,21 @@
+package usaco.gold.point_update_range_sum;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1749/
+
+Remove at index = decrease rank of later elements
+Insert at index = increase rank of later elements
+Find the kth smallest rank -> return index
+
+It works because when a number is deleted, duplicates of rank will appear.
+Since we are still finding kth, it works.
+
+ft[i] stores the sum of presence array from [1..i]
+pres[i] = 1 if x[i] is not removed; otherwise 0
+
+Time Complexity: O(NlogN)
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +23,64 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class ListRemovals {
+    static class RankFenwickTree {
+        int[] ft;
+        public RankFenwickTree(int n) {
+            ft = new int[n+1];
+        }
+        void insert(int i) {
+            add(i, 1);
+        }
+        void delete(int i) {
+            add(i, -1);
+        }
+        void add(int i, int u) {
+            for (; i < ft.length; i += i & -i) {
+                ft[i] += u;
+            }
+        }
+        int sum(int k) {
+            int s = 0;
+            for (; k > 0; k -= k & (-k)) {
+                s += ft[k];
+            }
+            return s;
+        }
+        int rank(int k) {
+            return sum(k);
+        }
+        int select(int k) {
+            int i = 0, n = ft.length-1;
+            int mask = Integer.highestOneBit(n);
+            for (; mask > 0; mask >>= 1) {
+                int next = i + mask;
+                if (next <= n && k > ft[next]) {
+                    i = next;
+                    k -= ft[next];
+                }
+            }
+            return i + 1 <= n ? i + 1 : -1;
+        }
+    }
+
     public static void solve(FastScanner io) throws Exception {
+        int n = io.nextInt();
+        RankFenwickTree ft = new RankFenwickTree(n);
         
+        int[] x = new int[n+1];        
+        for (int i = 1; i <= n; i++) x[i] = io.nextInt();
+        for (int i = 1; i <= n; i++) ft.insert(i);
+
+        int[] answer = new int[n+1];
+        for (int i = 1; i <= n; i++) {
+            int p = io.nextInt();
+            int idx = ft.select(p); // find the pth smallest active rank
+            answer[i] = x[idx]; // retrieve the value
+            ft.delete(idx); // delete the index
+        }
+        
+        for (int i = 1; i <= n; i++) io.print(answer[i] + " ");
     }
 
     /**
