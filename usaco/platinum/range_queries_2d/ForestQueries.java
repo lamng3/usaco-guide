@@ -1,21 +1,9 @@
+package usaco.platinum.range_queries_2d;
 /**
-Source: Codeforces
-Problem url: https://codeforces.com/contest/1181/problem/D
-
-The order will go up until all numbers are equal
-From then the order can be easily determined
-    * after m host, they will be equal again
-    * the order will be determined by % m
-Here, some queries can be answered offline.
-
-So if k <= n, we can return the hosted city.
-If k <= n + L (where L is the sum of deficit), we do offline processing to get which city is hosted.
-    * The task now becomes given a list of deficit, and k, which city they belongs to?
-If k > n + L, now all cities have been hosted with same number of times. 
-    * We can simply do a round-robin mod m calculation.
-
-I think this is not an "Easy" problem in USACO :) Definitely not straightforward.
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1652/
 */
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -23,37 +11,56 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class ForestQueries {
+    static class SumFenwickTree2D {
+        int[][] ft;
+        int n, m;
+        public SumFenwickTree2D(int n, int m) {
+            ft = new int[n+1][m+1];
+            this.n = n;
+            this.m = m;
+        }
+        void add(int x, int y, int u) {
+            for (int i = x; i <= n; i += i & -i) {
+                for (int j = y; j <= m; j += j & -j) {
+                    ft[i][j] += u;
+                }
+            }
+        }
+        int sum(int x, int y) {
+            int s = 0;
+            for (int i = x; i > 0; i -= i & -i) {
+                for (int j = y; j > 0; j -= j & -j) {
+                    s += ft[i][j];
+                }
+            }
+            return s;
+        }
+        int rectange_sum(int x1, int y1, int x2, int y2) {
+            int s = 0;
+            s += sum(x2, y2);
+            s -= sum(x1-1, y2);
+            s -= sum(x2, y1-1);
+            s += sum(x1-1, y1-1);
+            return s;
+        }
+    }
+
     public static void solve(FastScanner io) throws Exception {
-        int n = io.nextInt(), m = io.nextInt(), q = io.nextInt();
-        int[] a = new int[n+1];
-        long[] c = new long[m+1];
-        
-        long maxc = 0;
+        int n = io.nextInt(), q = io.nextInt();
+
+        SumFenwickTree2D ft = new SumFenwickTree2D(n, n);
         for (int i = 1; i <= n; i++) {
-            a[i] = io.nextInt();
-            maxc = Math.max(maxc, ++c[a[i]]);
+            char[] ch = io.nextLine().toCharArray();
+            for (int j = 1; j <= n; j++) {
+                if (ch[j-1] == '*') ft.add(i, j, 1);
+            }
         }
 
-        long[] deficit = new long[m+1];
-        long L = 0; // sum of deficit
-        for (int i = 1; i <= m; i++) {
-            deficit[i] = maxc - c[a[i]];
-            L += deficit[i];
-        }
-
-        for (int i = 1; i <= q; i++) {
-            long k = io.nextLong();
-            if (k <= n) {
-                io.println(a[(int)k]);
-            }
-            else if (k <= n + L) {
-                // solving
-                // I think I am being too strict on Fenwick Tree
-            }
-            else {
-                io.println((k - 1 - (n + L)) % m + 1);
-            }
+        for (int i = 0 ; i < q; i++) {
+            int x1 = io.nextInt(), y1 = io.nextInt();
+            int x2 = io.nextInt(), y2 = io.nextInt();
+            io.println(ft.rectange_sum(x1, y1, x2, y2));
         }
     }
 
