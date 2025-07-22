@@ -16,7 +16,8 @@ If k <= n + L (where L is the sum of deficit), we do offline processing to get w
 If k > n + L, now all cities have been hosted with same number of times. 
     * We can simply do a round-robin mod m calculation.
 
-I think this is not an "Easy" problem in USACO :) Definitely not straightforward.
+I think this is not an "Easy" problem in USACO :) 
+Definitely not straightforward, and a scam from USACO :">
 */
 
 import java.io.*;
@@ -26,7 +27,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class Irrigation {
     public static void solve(FastScanner io) throws Exception {
         int n = io.nextInt(), m = io.nextInt(), q = io.nextInt();
         int[] a = new int[n+1];
