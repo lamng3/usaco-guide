@@ -1,3 +1,24 @@
+package solving;
+/**
+Source: Codeforces
+Problem url: https://codeforces.com/contest/1181/problem/D
+Belongs to USACO Gold: Point Update Range Sum
+
+The order will go up until all numbers are equal
+From then the order can be easily determined
+    * after m host, they will be equal again
+    * the order will be determined by % m
+Here, some queries can be answered offline.
+
+So if k <= n, we can return the hosted city.
+If k <= n + L (where L is the sum of deficit), we do offline processing to get which city is hosted.
+    * The task now becomes given a list of deficit, and k, which city they belongs to?
+If k > n + L, now all cities have been hosted with same number of times. 
+    * We can simply do a round-robin mod m calculation.
+
+I think this is not an "Easy" problem in USACO :) Definitely not straightforward.
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -7,7 +28,36 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
+        int n = io.nextInt(), m = io.nextInt(), q = io.nextInt();
+        int[] a = new int[n+1];
+        long[] c = new long[m+1];
         
+        long maxc = 0;
+        for (int i = 1; i <= n; i++) {
+            a[i] = io.nextInt();
+            maxc = Math.max(maxc, ++c[a[i]]);
+        }
+
+        long[] deficit = new long[m+1];
+        long L = 0; // sum of deficit
+        for (int i = 1; i <= m; i++) {
+            deficit[i] = maxc - c[a[i]];
+            L += deficit[i];
+        }
+
+        for (int i = 1; i <= q; i++) {
+            long k = io.nextLong();
+            if (k <= n) {
+                io.println(a[(int)k]);
+            }
+            else if (k <= n + L) {
+                // solving
+                // I think I am being too strict on Fenwick Tree
+            }
+            else {
+                io.println((k - 1 - (n + L)) % m + 1);
+            }
+        }
     }
 
     /**
