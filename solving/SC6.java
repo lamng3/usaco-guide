@@ -1,3 +1,8 @@
+package solving;
+/**
+Source: Summer Contest Day 2 - Problem 6
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +10,99 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
-    public static void solve(FastScanner io) throws Exception {
+public class SC6 {
+    public static boolean[] visited;
 
+    public static void dfs(int u, int id, int[][] room, List<Integer>[] adj) {
+        
+    }
+    
+    public static int subtask1(
+        int n, int m, int s, int e, int k, 
+        FastScanner io
+    ) {
+        // room bounds
+        int[][] room = new int[n+1][2];
+        for (int i = 1; i <= n; i++) {
+            int l = io.nextInt(), r = io.nextInt();
+            room[i] = new int[]{l, r};
+        }
+
+        // directed graph
+        List<Integer>[] adj = new ArrayList[n+1];
+        for (int i = 1; i <= n; i++) adj[i] = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            int u = io.nextInt(), v = io.nextInt();
+            adj[u].add(v);
+        }
+
+        // check if an employee can go from s to e with dfs
+        visited = new boolean[k+1];
+        for (int i = 1; i <= k; i++) {
+            dfs(s, i, room, adj);
+        }
+
+        return 0;
+    }
+
+    public static int subtask2(
+        int n, int m, int s, int e, int k, 
+        FastScanner io
+    ) {
+        /**
+            some employees go on the same route, so dfs on all is a bit of waste
+            so we can only care about important points
+            we partition all employees such that each partition they have the same property 
+                * (e.g. go on same route)
+            now the task is how to partition?
+            sweep line is a technique (not an algorithm)
+            how to better think and get inspired to this problem?
+
+            I think the key here is how to think in that way.
+
+            https://cses.fi/problemset/task/1740
+            https://vn.spoj.com/problems/CEPC08B/
+        */
+
+        // room bounds
+        int[][] room = new int[n+1][2];
+        for (int i = 1; i <= n; i++) {
+            int l = io.nextInt(), r = io.nextInt();
+            room[i] = new int[]{l, r};
+        }
+
+        // directed graph
+        List<Integer>[] adj = new ArrayList[n+1];
+        for (int i = 1; i <= n; i++) adj[i] = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            int u = io.nextInt(), v = io.nextInt();
+            adj[u].add(v);
+        }
+
+        // check if an employee can go from s to e with dfs
+        visited = new boolean[k+1];
+        for (int i = 1; i <= k; i++) {
+            dfs(s, i, room, adj);
+        }
+
+        return 0;
+    }
+
+    public static void solve(FastScanner io) throws Exception {
+        int n = io.nextInt(), m = io.nextInt();
+        int s = io.nextInt(), e = io.nextInt();
+        int k = io.nextInt();
+
+        // subtask 1: k <= 2000
+        if (k <= 2000) {
+            int answer = subtask1(n, m, s, e, k, io);
+            io.println(answer);
+        }
+        // subtask 2: k <= 1e9
+        else {
+            int answer = subtask2(n, m, s, e, k, io);
+            io.println(answer);
+        }
     }
 
     /**

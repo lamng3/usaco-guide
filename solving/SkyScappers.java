@@ -1,3 +1,12 @@
+package solving;
+/**
+Source: SPOJ
+Problem url: https://vn.spoj.com/problems/CEPC08B/
+
+Line-Sweep Idea
+Idea is to consider flood from top down, meaning from the point all houses are flooded.
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,7 +14,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class SkyScappers {
     public static void solve(FastScanner io) throws Exception {
 
     }
