@@ -1,3 +1,13 @@
+package usaco.platinum.sweep_line;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1619/
+
+Straight-forward implementation of events.
+
+Time Complexity: O(NlogN)
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,9 +15,25 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class RestaurantCustomers {
     public static void solve(FastScanner io) throws Exception {
-        
+        int n = io.nextInt();
+        List<int[]> events = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            int a = io.nextInt(), b = io.nextInt();
+            events.add(new int[]{a, -1});
+            events.add(new int[]{b, 1});
+        }
+        Collections.sort(events, (e1, e2) -> {
+            if (e1[0] == e2[0]) return e1[1] - e2[1];
+            return e1[0] - e2[0];
+        });
+        int count = 0, best = 0;
+        for (int[] e : events) {
+            count += -e[1];
+            best = Math.max(best, count);
+        }
+        io.println(best);
     }
 
     /**

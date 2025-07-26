@@ -21,6 +21,10 @@ USACO Guide: [Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modu
 ### Exercise
 * [CSES Two Sets II](https://cses.fi/problemset/task/1093/)
 
+## Sweep Line
+
+Imagine a vertical line that sweeps from left to right. We do not need to keep track of all possible positions, just "critical" ones.
+
 ## Fenwick Tree
 
 A Fenwick tree can support the following range operations:
