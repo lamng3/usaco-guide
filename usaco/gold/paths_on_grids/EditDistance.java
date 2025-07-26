@@ -3,12 +3,19 @@ package usaco.gold.paths_on_grids;
 Source: CSES
 Problem url: https://cses.fi/problemset/task/1639/
 
-a[i] == b[i] -> dp[i][j] = dp[i-1][j-1]
-add: dp[i][j] = dp[i-1][j] + 1
-remove: dp[i][j] = dp[i][j-1] + 1
-replace: dp[i][j] = dp[i-1][j-1] + 1
+dp[i][j] = min number of operations to change a[:i] to b[:k]
+we have 4 possibilities:
+a[i-1] == b[j-1]
+    * dp[i][j] = dp[i-1][j-1] (no change)
+add b[j-1] to a[:i]
+    * dp[i][j] = dp[i][j-1] + 1
+remove a[i-1]
+    * dp[i][j] = dp[i-1][j-1] + 1
+replace a[i-1] with b[j-1]
+    * dp[i][j] = dp[i-1][j-1] + 1
+
 I think add and remove just depends on which angle we are looking at.
-In the above, we are considering looking at string a.
+In the above, we are considering looking at string a as the base.
 
 Time Complexity: O(MN)
 */
@@ -46,8 +53,8 @@ public class EditDistance {
                     dp[i][j] = dp[i-1][j-1]; // do nothing
                 }
                 else {
-                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j] + 1); // add 1
-                    dp[i][j] = Math.min(dp[i][j], dp[i][j-1] + 1); // remove 1
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j] + 1); // remove a[i-1]
+                    dp[i][j] = Math.min(dp[i][j], dp[i][j-1] + 1); // add b[j-1]
                     dp[i][j] = Math.min(dp[i][j], dp[i-1][j-1] + 1); // replace
                 }
             }
