@@ -28,6 +28,32 @@ import java.util.stream.*;
     Nathan
 */
 public class EditDistance {
+    public static void solve_2(FastScanner io) throws Exception {
+        /**
+            cleaner implementation and more optimized way to handle tabular
+        */
+        int oo = oo_int; // infinite number
+        char[] a = io.nextLine().toCharArray();
+        char[] b = io.nextLine().toCharArray();
+        int m = a.length, n = b.length;
+        int[][] dp = new int[m+1][n+1];
+        for (int i = 0; i <= m; i++) Arrays.fill(dp[i], oo);
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= n; j++) {
+                if (i > 0) { // remove a[i-1]
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j] + 1);
+                }
+                if (j > 0) { // add b[j-1]
+                    dp[i][j] = Math.min(dp[i][j], dp[i][j-1] + 1);
+                }
+                if (i > 0 && j > 0) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j-1] + (a[i-1] == b[j-1] ? 0 : 1));
+                }
+            }
+        }
+        io.println(dp[m][n]);
+    }
+
     public static void solve(FastScanner io) throws Exception {
         int oo = oo_int; // infinite number
 
@@ -53,8 +79,8 @@ public class EditDistance {
                     dp[i][j] = dp[i-1][j-1]; // do nothing
                 }
                 else {
-                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j] + 1); // remove a[i-1]
-                    dp[i][j] = Math.min(dp[i][j], dp[i][j-1] + 1); // add b[j-1]
+                    dp[i][j] = Math.min(dp[i][j], dp[i-1][j] + 1); // add 1
+                    dp[i][j] = Math.min(dp[i][j], dp[i][j-1] + 1); // remove 1
                     dp[i][j] = Math.min(dp[i][j], dp[i-1][j-1] + 1); // replace
                 }
             }
