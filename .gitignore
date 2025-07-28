@@ -9,3 +9,6 @@ lib/
 Kattio.java
 FastScanner.java
 template.java
+
+# misc
+.LCKA.java~
