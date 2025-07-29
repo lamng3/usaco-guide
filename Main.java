@@ -78,6 +78,7 @@ public class Main {
         return res;
     }
     static boolean[] sieve(int n) {
+        // time complexity: O(nloglogn)
         boolean[] prime = new boolean[n+1];
         Arrays.fill(prime, true);
         prime[0] = prime[1] = false;
@@ -99,6 +100,18 @@ public class Main {
         }
         if (n > 1) prime[n] = 1; // if n is a large prime
         return prime;
+    }
+    static int[] spf(int n) { // smallest prime factor
+        // time complexity: O(nloglogn)
+        int[] spf = new int[n+1];
+        for (int i = 2; i <= n; i++) {
+            if (spf[i] == 0) {
+                for (int j = i; j <= n; j+=i) {
+                    if (spf[j] == 0) spf[j] = i;
+                }
+            }
+        }
+        return spf;
     }
  
     // ARRAY OPERATIONS
