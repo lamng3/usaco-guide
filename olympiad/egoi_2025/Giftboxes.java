@@ -1,3 +1,11 @@
+package olympiad.egoi_2025;
+/**
+Source: Kattis
+Problem url: https://open.kattis.com/problems/giftboxes
+
+Quite interesting problem
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -5,7 +13,7 @@ import java.util.stream.*;
 /**
     Nathan
 */
-public class Main {
+public class Giftboxes {
     public static int[] subtask1(int[] a, int T, int N) {
         int[] cnt = new int[T];
         for (int i = 0; i < N; i++) {
