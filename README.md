@@ -21,6 +21,30 @@ USACO Guide: [Modular Arithmetic](https://usaco.guide/gold/modular?lang=cpp#modu
 ### Exercise
 * [CSES Two Sets II](https://cses.fi/problemset/task/1093/)
 
+## Divisibility
+
+### Density of Primes
+
+Let `Pi(N)` be the number of primes from 1 to N. For example, `Pi(10) = 4`. It is possible to show that `Pi(N) ~ N / log(N)`, meaning that primes are quite frequent.
+
+### Conjectures
+
+There are many conjectures involving primes.
+
+- **Goldbach's Conjecture:** Each even integer N > 2 can be represented as a sum of N = A + B, so that both A and B are primes.
+
+- **Twin Prime Conjecture:** There is an infinite number of pairs of the form (p, p+2), where both p and p+2 are primes.
+
+- **Legendre’s Conjecture:** There is always a prime between *N^2* and *(N+1)^2*, where N is any positive integer.
+
+### Euler's Totient Function
+
+A and B are coprime if gcd(A, B) = 1. Euler's totient function Phi(N) gives the number of coprime numbers to N between 1 and N.
+
+For example, Phi(12) = 4 because 1, 5, 7, 11 are coprime to 12.
+
+Phi(N) can be calculated as `Phi(N) = PI_{i = 1}^{k} p_i^{a_i - 1} (p_i - 1)`. Phi(N) = N-1 if N prime.
+
 ## Sweep Line
 
 Imagine a vertical line that sweeps from left to right. We do not need to keep track of all possible positions, just "critical" ones.

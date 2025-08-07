@@ -1,3 +1,11 @@
+package usaco.gold.divisibility;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1713
+
+2 solutions are provided
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -7,7 +15,48 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
-        
+        int n = io.nextInt();
+        for (int q = 0; q < n; q++) {
+            int x = io.nextInt();
+            long answer = 1;
+            for (int p = 2; p * p <= x; p++) {
+                int cnt = 0;
+                while (x % p == 0) {
+                    cnt++;
+                    x /= p;
+                }
+                if (cnt > 0) answer *= (cnt + 1);
+            }
+            if (x > 1) answer *= 2; // x prime
+            io.println(answer);
+        }
+    }
+
+    public static void solve_with_spf(FastScanner io) throws Exception {
+        int maxn = (int)1e6;
+        int[] spf = new int[maxn+1];
+        for (int i = 2; i <= maxn; i++) {
+            if (spf[i] == 0) {
+                for (int j = i; j <= maxn; j+=i) {
+                    spf[j] = i;
+                }
+            }
+        }
+        int n = io.nextInt();
+        for (int q = 0; q < n; q++) {
+            int x = io.nextInt();
+            int answer = 1;
+            while (x > 1) {
+                int p = spf[x];
+                int cnt = 0;
+                while (x % p == 0) {
+                    cnt++;
+                    x /= p;
+                }
+                answer *= (cnt + 1);
+            }
+            io.println(answer);
+        }
     }
 
     /**
@@ -58,7 +107,6 @@ public class Main {
     static int sign(long x) { return x < 0 ? -1 : 1; }
  
     // NUMBER THEORY
-    static int gcd_recursive(int a, int b) { return b > 0 ? gcd(b, a % b) : a; }
     static int gcd(int a, int b) { 
         while (b > 0) {
             int r = a % b;
@@ -67,7 +115,7 @@ public class Main {
         }
         return a;
     }
-    static int lcm(int a, int b) { return a / gcd(a,b) * b; } // prevent overflow with a / gcd
+    static int lcm(int a, int b) { return a * b / gcd(a,b); }
     static int binpow(int a, int b) {
         int res = 1;
         while (b > 0) {
@@ -169,86 +217,6 @@ public class Main {
 
     // STRING
     static String repeat(String s, int count) { return s.repeat(count); }
-    static int[] prefix_function(char[] s) { // KMP algorithm
-        /**
-            Prefix function pi[i] is the max prefix that is also suffix
-            pi[i] = k means s[0..i] = s[(i-k+1)..i]
-        */
-        int n = s.length;
-        int[] pi = new int[n];
-        for (int i = 1; i < n; i++) {
-            int j = pi[i];
-            while (j > 0 && s[j] != s[i]) j = pi[j-1];
-            if (s[i] == s[j]) j++;
-            pi[i] = j;
-        }
-        return pi;
-    }
-    // LEARNING CONTENT
-    static int[] prefix_function_naive(char[] s) {
-        /**
-            Naive Implementation
-            Time Complexity: O(N^3)
-        */
-        int n = s.length;
-        int[] pi = new int[n];
-        for (int i = 0; i < n; i++) {
-            for (int k = 0; k <= i; k++) {
-                boolean ok = true;
-                for (int j = 0; j < k; j++) {
-                    if (s[j] != s[i-k+1+j]) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (ok) pi[i] = k;
-            }
-        }
-        return pi;
-    }
-    static int[] prefix_function_opt1(char[] s) {
-        /**
-            First Optimization: pi[i+1] can only increase at most once from pi[i]
-            Time Complexity: O(N^2)
-        */
-        int n = s.length;
-        int[] pi = new int[n];
-        for (int i = 1; i < n; i++) {
-            int k = Math.min(pi[i-1] + 1, i);
-            while (k > 0) {
-                boolean ok = true;
-                for (int j = 0; j < k; j++) {
-                    if (s[j] != s[i-k+1+j]) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (ok) break;
-                k--;
-            }
-            pi[i] = k;
-        }
-        return pi;
-    }
-    static int[] prefix_function_opt2(char[] s) {
-        /**
-            Second Optimization: Find largest j < i such that prefix = suffix
-                Jump to j by taking pi[i-1]
-                This is the KMP algorithm
-            Time Complexity: O(N)
-        */
-        int n = s.length;
-        int[] pi = new int[n];
-        for (int i = 1; i < n; i++) {
-            int j = pi[i-1];
-            while (j > 0 && s[j] != s[i]) { // mismatch -- fallback
-                j = pi[j-1];
-            }
-            if (s[i] == s[j]) j++;
-            pi[i] = j;
-        }
-        return pi;
-    }
 
     // BINARY SEARCH
     static int[] binarySearch(int x, int[] a) {
