@@ -7,7 +7,7 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
-        
+        // why we concat pattern before string?
     }
 
     /**
@@ -174,6 +174,18 @@ public class Main {
         /**
             Prefix function pi[i] is the max prefix that is also suffix
             pi[i] = k means s[0..i] = s[(i-k+1)..i]
+
+            string c = s + # + t
+            if pi[i] = n, then at i - 2 * n the string s appears in t
+                pi[i] = n means c[i-n+1..i] = s
+                there are n+1 characters before t
+                start position of s will be i - n + 1 - (n + 1) = i - 2n
+            math: i - (n + 1) - n + 1 = i - 2n
+
+            usually, we want to keep pattern + '#' + string
+                to make sure pi[i] = |pattern| we have a meaningful pi
+            
+            note that # or @ or ... must be a character not exist in pattern or string
         */
         int n = s.length;
         int[] pi = new int[n];
