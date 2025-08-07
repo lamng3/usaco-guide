@@ -180,6 +180,8 @@ public class Main {
                 pi[i] = n means c[i-n+1..i] = s
                 there are n+1 characters before t
                 start position of s will be i - n + 1 - (n + 1) = i - 2n
+                this is because, i - (n+1) strips the first n+1 characters before t
+                    and (-n+1) calculates the starting position
             math: i - (n + 1) - n + 1 = i - 2n
 
             usually, we want to keep pattern + '#' + string
