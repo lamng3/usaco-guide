@@ -174,6 +174,7 @@ public class Main {
         /**
             Prefix function pi[i] is the max prefix that is also suffix
             pi[i] = k means s[0..i] = s[(i-k+1)..i]
+            note that KMP excludes itself as a prefix, so pi[0] = 0
 
             string c = s + # + t
             if pi[i] = n, then at i - 2 * n the string s appears in t
@@ -199,6 +200,31 @@ public class Main {
         }
         return pi;
     }
+    static int[] count_occurences(char[] s) {
+        int n = s.length;
+        int[] pi = prefix_function(s);
+        int[] occ = new int[n+1];
+        // count how often each prefix length appears
+        for (int i = 0; i < n; i++) occ[pi[i]]++;
+        // every occurrence of the longer border of length 
+        //      "carries along" an occurrence of its shorter border.
+        // e.g. occ[10] = 5 -- length 10 appears 5 times
+        //      pi[9] = 6 --> each length 10 should also contains a length 6
+        for (int i = n-1; i > 0; i--) occ[pi[i-1]] += occ[i];
+        // include itself as prefix
+        for (int i = 0; i <= n; i++) occ[i]++;
+        return occ;
+    }
+    static boolean check_repeated_substring(char[] s) {
+        /**
+            Source: https://leetcode.com/problems/repeated-substring-pattern/
+        */
+        int n = s.length;
+        int[] pi = prefix_function(s);
+        int L = pi[n-1]; // longest prefix
+        return (L > 0) && (n % (n - L) == 0);
+    }
+
     // LEARNING CONTENT
     static int[] prefix_function_naive(char[] s) {
         /**
