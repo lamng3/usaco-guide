@@ -170,6 +170,7 @@ public class Main {
     // STRING
     static String repeat(String s, int count) { return s.repeat(count); }
     static String combine_string(String s, String p) { return s.concat("#").concat(p); }
+    static String reverse(String s) { return new StringBuilder(s).reverse().toString(); }
     static int[] prefix_function(char[] s) { // KMP algorithm
         /**
             Prefix function pi[i] is the max prefix that is also suffix
@@ -223,6 +224,13 @@ public class Main {
         int[] pi = prefix_function(s);
         int L = pi[n-1]; // longest prefix
         return (L > 0) && (n % (n - L) == 0);
+    }
+    static int longest_palindromic_substring(String t) {
+        String rt = reverse(t);
+        char[] s = combine_string(t, rt).toCharArray();
+        int n = s.length;
+        int[] pi = prefix_function(s);
+        return pi[n-1]; // longest palindromic prefix
     }
 
     // LEARNING CONTENT
