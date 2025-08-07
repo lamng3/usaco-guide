@@ -1,3 +1,10 @@
+package usaco.advanced.string_searching;
+/**
+Source: CSES
+Problem url: https://cses.fi/problemset/task/1753/
+Topic: KMP
+*/
+
 import java.io.*;
 import java.util.*;
 import java.util.stream.*;
@@ -6,8 +13,26 @@ import java.util.stream.*;
     Nathan
 */
 public class Main {
+    static int[] kmp(char[] s) {
+        int n = s.length;
+        int[] pi = new int[n];
+        for (int i = 1; i < n; i++) {
+            // pi[i] can increase at most once
+            int j = pi[i-1];
+            while (j > 0 && s[i] != s[j]) j = pi[j-1];
+            if (s[i] == s[j]) j++; // j = 0
+            pi[i] = j;
+        }
+        return pi;
+    }
+
     public static void solve(FastScanner io) throws Exception {
-        
+        String s = io.nextLine(), p = io.nextLine();
+        char[] spc = combine_string(p, s).toCharArray();
+        int[] pi = kmp(spc);
+        int answer = 0;
+        for (int l : pi) if (l == p.length()) answer++;
+        io.println(answer);
     }
 
     /**
