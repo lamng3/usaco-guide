@@ -7,7 +7,7 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
-        // why we concat pattern before string?
+
     }
 
     /**
@@ -99,7 +99,7 @@ public class Main {
         }
         return prime;
     }
-    static int[] primeFactorization(int n) {
+    static int[] prime_factorization(int n) {
         int[] prime = new int[n+1];
         for (int p = 2; p * p <= n; p++) {
             while (n % p == 0) {
@@ -146,12 +146,12 @@ public class Main {
     static void sort(int[] a) { Arrays.sort(a); }
     static void sort(long[] a) { Arrays.sort(a); }
     static <T extends Comparable<? super T>> void sort(List<T> a) { Collections.sort(a); }
-    static void ruffleSort(int[] a) { shuffle(a); sort(a); }
+    static void ruffle_sort(int[] a) { shuffle(a); sort(a); }
  
     // FACTORIALS & nCk
 	static long[] factorials = new long[2_000_005];
 	static long[] inverseFactorials = new long[2_000_005];
-	static void precomputeFactorials() {
+	static void precompute_factorials() {
         int n = factorials.length;
 		factorials[0] = 1;
 		for (int i = 1; i < factorials.length; i++) {
@@ -171,11 +171,38 @@ public class Main {
     static String repeat(String s, int count) { return s.repeat(count); }
     static String combine_string(String s, String p) { return s.concat("#").concat(p); }
     static String reverse(String s) { return new StringBuilder(s).reverse().toString(); }
+    static int[] z_function(char[] s) {
+        /**
+            Z function is similar to KMP
+            Z[i] denotes the length of longest common prefix of S and S[i:] 
+            Time Complexity: O(N)  
+            
+            We maintain [x,y] interval such that s[x,y] is prefix of s
+            For any k in [x,y], meaning x <= k <= y, we can confirm:
+                - s[k-x..] for at least y - k characters
+            
+            z[k-x] means "If started matching from offset k - x, how many characters match?"
+                - k + z[k-x] < y -> z[k] = z[k-x] (ends before y)
+                - k + z[k-x] >= y -> s[0..k-y] = s[k..y]
+                    * we need to compare character by character to extend
+        */
+        int n = s.length;
+        int[] z = new int[n];
+        int x = 0, y = 0;
+        for (int i = 1; i < n; i++) {
+            z[i] = Math.max(z[i], Math.min(z[i-x], y-i+1));
+            while (i+z[i] < n && s[z[i]] == s[z[i+z[i]]]) {
+                x = i; y = i + z[i]; z[i]++;
+            }
+        }
+        return z;
+    }
     static int[] prefix_function(char[] s) { // KMP algorithm
         /**
             Prefix function pi[i] is the max prefix that is also suffix
             pi[i] = k means s[0..i] = s[(i-k+1)..i]
             note that KMP excludes itself as a prefix, so pi[0] = 0
+            Time Complexity: O(N)
 
             string c = s + # + t
             if pi[i] = n, then at i - 2 * n the string s appears in t
@@ -300,7 +327,7 @@ public class Main {
     }
 
     // BINARY SEARCH
-    static int[] binarySearch(int x, int[] a) {
+    static int[] binary_search(int x, int[] a) {
         // looking for transition point
         int l = -1, r = a.length-1;
         while (r - l > 1) {
@@ -315,7 +342,7 @@ public class Main {
     }
 
     // COORDINATE COMPRESSION
-    static int[] coordinateCompress(int[] a) {
+    static int[] coordinate_compress(int[] a) {
         int n = a.length;
         int[] sorted = a.clone(); sort(sorted);
         Map<Integer, Integer> rank = new HashMap<>();
@@ -466,7 +493,7 @@ public class Main {
             a[k] += u;
             for (; k < ft.length; k += lsone(k)) ft[k] += u;
         }
-        void rangeAdd(int l, int r, int u) {
+        void range_add(int l, int r, int u) {
             // difference-array (or "prefix‑difference") trick
             add(l, u);
             add(r+1, -u);
@@ -512,7 +539,7 @@ public class Main {
             }
             return s;
         }
-        int rectangleSum(int x1, int y1, int x2, int y2) {
+        int rectangle_sum(int x1, int y1, int x2, int y2) {
             int s = 0;
             s += sum(x2, y2);
             s -= sum(x2, y1-1);
