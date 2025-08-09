@@ -185,11 +185,14 @@ public class Main {
                 - k + z[k-x] < y -> z[k] = z[k-x] (ends before y)
                 - k + z[k-x] >= y -> s[0..k-y] = s[k..y]
                     * we need to compare character by character to extend
+
+            Z-algorithm always work and no risk for collisions, but hard to implement :)
         */
         int n = s.length;
         int[] z = new int[n];
         int x = 0, y = 0;
         for (int i = 1; i < n; i++) {
+            // todo: exemplify this formula
             z[i] = Math.max(z[i], Math.min(z[i-x], y-i+1));
             while (i+z[i] < n && s[z[i]] == s[z[i+z[i]]]) {
                 x = i; y = i + z[i]; z[i]++;
