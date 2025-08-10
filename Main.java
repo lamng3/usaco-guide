@@ -343,6 +343,27 @@ public class Main {
         // a[l] <= x < a[r]
         return new int[]{l,r};
     }
+    static boolean check() { return true; } // template check function
+    static int binary_lifting_max(int min, int max) {
+        int maxpos = Integer.highestOneBit(max - min);
+        int k = max;
+        for (int pos = maxpos; pos > 0; pos >>= 1) {
+            while (k - pos >= min && check()) {
+                k -= pos;
+            }
+        }
+        return k;
+    }
+    static int binary_lifting_min(int min, int max) {
+        int maxpos = Integer.highestOneBit(max - min);
+        int k = min;
+        for (int pos = maxpos; pos > 0; pos >>= 1) {
+            while (k + pos <= max && check()) {
+                k += pos;
+            }
+        }
+        return k;
+    }
 
     // COORDINATE COMPRESSION
     static int[] coordinate_compress(int[] a) {
