@@ -1,6 +1,20 @@
 # compiled java classes
 *.class
 
+# compiled c++ classes
+*.bin
+*.o
+*.exe
+main
+
+# common build outputs
+*.out
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+
 # CPH Judge (extension in VSCode)
 .cph/
 lib/

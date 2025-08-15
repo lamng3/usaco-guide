@@ -1,6 +1,22 @@
 # usaco-guide
 farmer john 👨‍🌾 sharing a fuji 🍎 with bessie the cow 🐄
 
+## Compile C++
+
+With libraries included in `bits/stdc++.h`
+```
+cd c++
+
+# compile main file
+clang++ -std=c++17 main.cpp -o main && ./main
+```
+
+Export path
+```
+export CPLUS_INCLUDE_PATH=/usr/local/include
+clang++ -std=c++17 main.cpp -o main && ./main
+```
+
 ## Modular Inverse
 In modular arithmetic, "dividing by 2" is not the same as "integer-dividing by 2". 
 
