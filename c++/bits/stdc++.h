@@ -1,6 +1,6 @@
 #pragma once
-// Portable "bits/stdc++.h" for clang++/libc++ on macOS
-// Includes common headers used in CP (no GCC internals).
+// portable "bits/stdc++.h" for clang++/libc++ on macOS
+// common headers used in CP (no GCC internals)
 
 #include <iostream>
 #include <iomanip>
