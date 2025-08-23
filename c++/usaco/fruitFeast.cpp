@@ -13,7 +13,7 @@ void solve() {
         if (i >= a) dp[i] |= dp[i-a];
         if (i >= b) dp[i] |= dp[i-b];
     }
-    for (int i = 1; i <= t; i++) if (i * 2 <= t) dp[i] = dp[i*2]; // drink water
+    for (int i = 1; i <= t; i++) dp[i/2] |= dp[i]; // drink water
     for (int i = 1; i <= t; i++) {
         if (dp[i]) continue;
         if (i >= a) dp[i] |= dp[i-a];
@@ -25,6 +25,8 @@ void solve() {
 }
 
 int main() {
+    freopen("feast.in", "r", stdin);
+    freopen("feast.out", "w", stdout);
     ios::sync_with_stdio(0);
     cin.tie(nullptr);
     int tt = 1;
