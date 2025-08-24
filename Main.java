@@ -7,7 +7,7 @@ import java.util.stream.*;
 */
 public class Main {
     public static void solve(FastScanner io) throws Exception {
-
+                
     }
 
     /**
@@ -17,7 +17,7 @@ public class Main {
         // FastScanner io = new FastScanner("usaco-problem-name"); // usaco
         FastScanner io = new FastScanner();
 		int t = 1;
-        // t = io.nextInt(); // t testcases
+        t = io.nextInt(); // t testcases
 		while (t-->0) {
             solve(io);
         }
@@ -345,6 +345,14 @@ public class Main {
     }
     static boolean check() { return true; } // template check function
     static int binary_lifting_max(int min, int max) {
+        /**
+            the lifting depends on whether the check is monotonic
+            if not, then it is light switches (bitmask build)
+            choosing maxpos depends on that
+
+            Integer.highestOneBit() can be helpful in bitmask case
+            k - pos = k | pos (turn bit on)
+        */
         int maxpos = Integer.highestOneBit(max - min);
         int k = max;
         for (int pos = maxpos; pos > 0; pos >>= 1) {
