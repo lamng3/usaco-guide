@@ -18,6 +18,13 @@ vi prefix_function(string s) {
 }
 
 int contains(string p, string s) {
+    /*
+        we care about pi(i) with i >= n + 1
+        |p| = n
+        if pi(i) = n
+        substring p appears in s at position i - (n+1) - n + 1 = i - 2 * n
+            i - 2 * n is the start of the string
+    */
     string a = p + '#' + s;
     vi pi = prefix_function(a);
     for (int x : pi) if (x == p.size()) return 1;
