@@ -15,5 +15,8 @@ Passing graph into DFS can cause stack overflow of memory blowup
 void dfs(int u, int p, vii g) {...} <-- avoid
 void dfs(int u, int p) {...}        <-- use this
 ```
+It is common to keep 2 DP arrays for DP on tree problems:
+- 1 DP for include node i in subtree
+- 1 DP for not include node i in subtree 
 ### Exercises
 - [CSES/Tree Matching](https://cses.fi/problemset/task/1130)
