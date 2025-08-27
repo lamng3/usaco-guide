@@ -1,3 +1,5 @@
+// problem url: https://leetcode.com/problems/number-of-digit-one/description/
+// difficulty: hard
 #include <bits/stdc++.h>
 using namespace std;
 
