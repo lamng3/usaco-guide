@@ -16,12 +16,7 @@ ll dp[20][185][2];
 
 ll solve_dp(string& num, int n, int x, bool tight) {
     if (x < 0) return 0;
-    if (n == 1) {
-        if (x >= 0 && x <= 9) {
-            return 1;
-        }
-        return 0;
-    }
+    if (n == 0) return (x == 0);
     if (dp[n][x][tight] != -1) return dp[n][x][tight];
     ll answer = 0;
     int ub = tight ? (num[(num.length() - n)] - '0') : 9; // upperbound

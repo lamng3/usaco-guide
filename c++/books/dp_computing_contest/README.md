@@ -9,6 +9,23 @@ vi dp;
 // dp.assign(n, 0)  <-- set this to avoid SIGSEV for vector access
 ```
 
+## Digit DP
+Digit DP asks to find the number of integers in a range that have a property. An example is provided below.
+```
+There are two integers n, m where 0 <= n <= m <= 1e18. Find the number of integers between n and m inclusive containing exactly k d digits. n, m, k, d are given in input.
+```
+Normally, when the number is large, we can think of Digit DP.
+Typicall there are 2 types of problem:
+- P1: How many X such that 0 <= X <= R satisfies `f(X)`.
+- P2: How many X such that L <= X <= R satisfies `f(X)`.
+But solving P1 only suffices to solve P2. 
+
+### Resources
+- [Introduction to Digit Dynamic Programming](https://www.youtube.com/watch?v=heUFId6Qd1A)
+
+### Exercises
+- [LeetCode Digit DP](https://leetcode.com/problem-list/r6yc959s/)
+
 ## DP on Tree
 Passing graph into DFS can cause stack overflow of memory blowup
 ```
