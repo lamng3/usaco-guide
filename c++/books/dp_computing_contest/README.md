@@ -1,4 +1,4 @@
-# Dynamic Programming for Computing Contest
+# Dynamic Programming for Computing Contests
 
 ## Segmentation Fault
 SIGSEGV error in C++, aka Segmentation Fault: 
