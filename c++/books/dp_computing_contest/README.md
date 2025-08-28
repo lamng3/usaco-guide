@@ -28,6 +28,24 @@ But solving P1 only suffices to solve P2.
 Use `const string& num` to avoid repeated string copies.
 - Doing so allows [2376. Count Special Integers](https://leetcode.com/problems/count-special-integers/description/) to AC.
 
+### Merging Subsets
+For some problems, it is not sufficient to just take `S \ {i}`. Instead, we need to look at all strict subsets of S. Therefore, we need to consider all possible ordered pairs `T \subset S`. For each element x, there are 3 possibilities:
+- x in S not in T
+- x in neither S or T
+- x in both S and T
+If x in T not in S, T is not a valid subset of S.
+Therefore, we reduced from `O(2^N * 2^N)` to just `O(3^N)`.
+
+**Hint:** Readers can use Newton's Expansion (Binomial Theorem) to proof the above. 
+```
+for (int mask = 0; mask < (1 << n); mask++) {
+	for (int submask = mask; submask != 0; submask = (submask - 1) & mask) {
+		int subset = mask ^ submask;
+		// do whatever you need to do here
+	}
+}
+```
+
 ### Resources
 - [Introduction to Digit Dynamic Programming](https://www.youtube.com/watch?v=heUFId6Qd1A)
 
