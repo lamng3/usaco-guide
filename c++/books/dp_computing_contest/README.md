@@ -31,6 +31,7 @@ for (int mask = 0; mask < (1 << n); mask++) {
 	}
 }
 ```
+When we subtract 1 from `submask`, we flip the rightmost bits of `submask` to 0, and setting the rest of the bits on the right to 1. This ensures that we eliminate the bit at the desired location by taking `mask ^ submask`.
 
 ## Digit DP
 Digit DP asks to find the number of integers in a range that have a property. An example is provided below.
