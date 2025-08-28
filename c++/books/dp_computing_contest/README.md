@@ -14,20 +14,6 @@ When N is sufficiently small enough that an exponential solution is better than 
 
 **Bitwise XOR:** `1 ^ 1 = 1`, otherwise 0.
 
-## Digit DP
-Digit DP asks to find the number of integers in a range that have a property. An example is provided below.
-```
-There are two integers n, m where 0 <= n <= m <= 1e18. Find the number of integers between n and m inclusive containing exactly k d digits. n, m, k, d are given in input.
-```
-Normally, when the number is large, we can think of Digit DP.
-Typicall there are 2 types of problem:
-- P1: How many X such that 0 <= X <= R satisfies `f(X)`.
-- P2: How many X such that L <= X <= R satisfies `f(X)`.
-But solving P1 only suffices to solve P2.
-
-Use `const string& num` to avoid repeated string copies.
-- Doing so allows [2376. Count Special Integers](https://leetcode.com/problems/count-special-integers/description/) to AC.
-
 ### Merging Subsets
 For some problems, it is not sufficient to just take `S \ {i}`. Instead, we need to look at all strict subsets of S. Therefore, we need to consider all possible ordered pairs `T \subset S`. For each element x, there are 3 possibilities:
 - x in S not in T
@@ -45,6 +31,20 @@ for (int mask = 0; mask < (1 << n); mask++) {
 	}
 }
 ```
+
+## Digit DP
+Digit DP asks to find the number of integers in a range that have a property. An example is provided below.
+```
+There are two integers n, m where 0 <= n <= m <= 1e18. Find the number of integers between n and m inclusive containing exactly k d digits. n, m, k, d are given in input.
+```
+Normally, when the number is large, we can think of Digit DP.
+Typicall there are 2 types of problem:
+- P1: How many X such that 0 <= X <= R satisfies `f(X)`.
+- P2: How many X such that L <= X <= R satisfies `f(X)`.
+But solving P1 only suffices to solve P2.
+
+Use `const string& num` to avoid repeated string copies.
+- Doing so allows [2376. Count Special Integers](https://leetcode.com/problems/count-special-integers/description/) to AC.
 
 ### Resources
 - [Introduction to Digit Dynamic Programming](https://www.youtube.com/watch?v=heUFId6Qd1A)
