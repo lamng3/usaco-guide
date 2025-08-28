@@ -51,5 +51,7 @@ Rerooting usually have 2 DFS. So the **Mental Model** is:
 - DFS2 as *pre-order DFS*, flowing downward from parent and siblings, computing child before visiting the child. 
     - Pushing information down from parent and siblings.
     - This can also be called *backward*.
+### Resources
+- [DP on Trees Tutorial](https://codeforces.com/blog/entry/20935)
 ### Exercises
 - [CSES/Tree Matching](https://cses.fi/problemset/task/1130)
