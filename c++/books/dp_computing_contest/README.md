@@ -1,4 +1,4 @@
-# Pattern Notebook
+# Dynamic Programming for Computing Contest
 
 ## Segmentation Fault
 SIGSEGV error in C++, aka Segmentation Fault: 
@@ -10,7 +10,7 @@ vi dp;
 ```
 
 ## Bitmask DP
-When N is sufficiently small enough that an exponential solution is better than a factorial one.
+When N is sufficiently small enough that an exponential solution is better than a factorial one. Bitmask DP is also called Subset DP.
 
 **Bitwise XOR:** `1 ^ 1 = 1`, otherwise 0.
 
