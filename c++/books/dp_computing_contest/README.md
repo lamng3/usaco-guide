@@ -18,7 +18,10 @@ Normally, when the number is large, we can think of Digit DP.
 Typicall there are 2 types of problem:
 - P1: How many X such that 0 <= X <= R satisfies `f(X)`.
 - P2: How many X such that L <= X <= R satisfies `f(X)`.
-But solving P1 only suffices to solve P2. 
+But solving P1 only suffices to solve P2.
+
+Use `const string& num` to avoid repeated string copies.
+- Doing so allows [2376. Count Special Integers](https://leetcode.com/problems/count-special-integers/description/) to AC.
 
 ### Resources
 - [Introduction to Digit Dynamic Programming](https://www.youtube.com/watch?v=heUFId6Qd1A)
