@@ -9,6 +9,11 @@ vi dp;
 // dp.assign(n, 0)  <-- set this to avoid SIGSEV for vector access
 ```
 
+## Bitmask DP
+When N is sufficiently small enough that an exponential solution is better than a factorial one.
+
+**Bitwise XOR:** `1 ^ 1 = 1`, otherwise 0.
+
 ## Digit DP
 Digit DP asks to find the number of integers in a range that have a property. An example is provided below.
 ```

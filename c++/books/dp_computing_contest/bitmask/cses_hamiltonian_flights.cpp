@@ -33,6 +33,7 @@ void solve() {
         if ((s & (1<<(n-1))) && (s != FULL-1)) continue;
         for (int end = 0; end < n; end++) {
             if ((s & (1<<end)) == 0) continue;
+            // bitwise xor: 1&1=1; otherwise 0.
             int prev = s ^ (1<<end);
             for (int j : g[end]) {
                 dp[s][end] += dp[prev][j];
