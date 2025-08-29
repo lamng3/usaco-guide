@@ -47,6 +47,19 @@ But solving P1 only suffices to solve P2.
 Use `const string& num` to avoid repeated string copies.
 - Doing so allows [2376. Count Special Integers](https://leetcode.com/problems/count-special-integers/description/) to AC.
 
+### Helpers
+Subtract one from a string.
+```
+string subtract_one(string s) {
+    if (s == "0") return "0";
+    int i = (int)s.size() - 1;
+    while (i >= 0 && s[i] == '0') { s[i] = '9'; --i; }
+    if (i >= 0) --s[i];
+    size_t p = s.find_first_not_of('0');
+    return p == string::npos ? "0" : s.substr(p);
+}
+```
+
 ### Resources
 - [Introduction to Digit Dynamic Programming](https://www.youtube.com/watch?v=heUFId6Qd1A)
 
