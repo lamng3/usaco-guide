@@ -1,4 +1,5 @@
 // problem url: https://leetcode.com/problems/can-i-win/description/
+// difficulty: medium
 #include <bits/stdc++.h>
 using namespace std;
 
