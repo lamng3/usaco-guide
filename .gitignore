@@ -1,31 +1,52 @@
-# compiled java classes
+# ============================
+# Preliminary
+# ============================
+# any file without extension 
+* 
+!*/ 
+!*.*
+
+# ============================
+# Java
+# ============================
+# Compiled Java classes
 *.class
 
-# compiled c++ classes
-*.bin
-*.o
-*.exe
-main
-
-# common build outputs
-*.out
-*.obj
-*.a
-*.so
-*.dll
-*.dylib
-
-# CPH Judge (extension in VSCode)
-.cph/
-lib/
-
-# these templates have been incorporated in Main.java
+# Temporary / backup Java files
+.LCKA.java~
 Kattio.java
 FastScanner.java
 template.java
 
-# misc
-.LCKA.java~
-interview/
+# ============================
+# C++
+# ============================
+# Compiled object files & binaries
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.a
+*.out
+*.exe
+*.bin
+main
+
+# ============================
+# Editors / Tools
+# ============================
+# VSCode
 .vscode/
+
+# Competitive Programming Helper (CPH Judge extension)
+.cph/
+
+# Libraries / auto-generated
+lib/
+
+# ============================
+# Misc
+# ============================
 .DS_Store
+interview/
