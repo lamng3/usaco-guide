@@ -8,7 +8,9 @@ typedef unsigned __int128 u128;
 typedef vector<u128> vi;
 typedef vector< vector<u128> > vii;
 
-int count(const string& s, const string& t) {
+void solve() {
+    string s; cin >> s;
+    string t; cin >> t;
     int m = (int) s.size(), n = (int) t.size();
     /*
         dp[i][j] = #subsequences in s[1..i] matches t[1..j]
@@ -25,14 +27,7 @@ int count(const string& s, const string& t) {
             }
         }
     }
-    return dp[m][n];
-}
-
-void solve() {
-    string s; cin >> s;
-    string t; cin >> t;
-    int ans = count(s, t);
-    cout << ans << '\n';
+    cout << (int) dp[m][n] << '\n';
 }
 
 int main() {
