@@ -17,9 +17,13 @@ The way 0/1 BFS works is that if an edge has weight 0, we add to the front; othe
 ```
 d[v] <= d[u] <= d[v] + 1 for each u in Q
 ```
+Unlike Dijkstra, 0/1-BFS does not need relaxation. Therefore, as each node is visited once, then we should get the answer.
+
 **Dial's Algorithm:** This is an extension of `0/1 BFS` where weights are allowed to be <= K. So we can keep `K+1` buckets in the queue.
 #### Sources
 [[CP Algorithms] 0/1 BFS](https://cp-algorithms.com/graph/01_bfs.html)
+#### Exercises
+- [[oj.uz] Baltic OI 2013 Day 2 Problem 2](https://oj.uz/problem/view/BOI13_tracks)
 
 ## 2. Useful Helpers
 ### 2.1. Big Numbers
